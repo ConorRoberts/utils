@@ -44,7 +44,7 @@ interface UploadImageResponse {
   messages: unknown[];
 }
 
-export class ImageUtils<ImageIds extends Record<string, string>> {
+export class ImageUtils<ImageIds extends Record<string, any>> {
   private blacklist: string[] = ["img.clerk.com"];
   private account: string;
   private _imageIds: ImageIds | undefined;
@@ -65,7 +65,7 @@ export class ImageUtils<ImageIds extends Record<string, string>> {
 
   get imageIds() {
     if (!this._imageIds) {
-      throw new Error(`imageIds was not supplied in constructor`);
+      throw new Error("imageIds was not supplied in constructor");
     }
 
     return this._imageIds;
@@ -154,6 +154,7 @@ export class ImageUtils<ImageIds extends Record<string, string>> {
 
           return { url: img.result.uploadURL, id };
         } catch (e) {
+          console.error("Error uploading image");
           throw e;
         }
       })

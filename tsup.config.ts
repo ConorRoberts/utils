@@ -4,6 +4,7 @@ export default defineConfig({
   format: ["esm"],
   sourcemap: true,
   dts: true,
+  clean: true,
   entry: {
     schema: "src/schema.ts",
     db: "src/db.ts",
