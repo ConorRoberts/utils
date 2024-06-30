@@ -1,2 +1,2 @@
 pnpm version patch
-pnpm publish
+pnpm publish --access public
