@@ -1,6 +1,7 @@
 {
   "name": "@conorroberts/utils",
   "description": "",
+  "private": false,
   "type": "module",
   "scripts": {
     "dev": "tsup --watch",
