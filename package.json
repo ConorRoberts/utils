@@ -8,6 +8,9 @@
     "build": "tsc --noEmit && tsup",
     "build:clean": "tsc --noEmit && tsup --clean"
   },
+  "files": [
+    "dist/**"
+  ],
   "exports": {
     "./db": {
       "types": "./dist/db.d.ts",
