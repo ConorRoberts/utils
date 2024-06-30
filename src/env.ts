@@ -1,5 +1,4 @@
 import { pipe } from "remeda";
-import type { BaseSchema, Output } from "valibot";
 import * as v from "valibot";
 
 const PUBLIC_ENV_PREFIX = "PUBLIC_" as const;
@@ -10,10 +9,10 @@ const PUBLIC_ENV_PREFIX = "PUBLIC_" as const;
  * @returns An object containing client environment variables and another containing server environment variables
  */
 export const createEnv = <
-  Schema extends Record<string, BaseSchema>,
+  Schema extends Record<string, v.GenericSchema>,
   Env = {
-    [K in keyof Schema]: Output<Schema[K]>;
-  },
+    [K in keyof Schema]: v.InferOutput<Schema[K]>;
+  }
 >(args: {
   schema: Schema;
   env: any;
@@ -33,7 +32,11 @@ export const createEnv = <
   }
 
   type ClientEnvKeys = Exclude<
-    { [K in keyof Env]: K extends `${typeof PUBLIC_ENV_PREFIX}${string}` ? K : never }[keyof Env],
+    {
+      [K in keyof Env]: K extends `${typeof PUBLIC_ENV_PREFIX}${string}`
+        ? K
+        : never;
+    }[keyof Env],
     undefined
   >;
 
@@ -45,8 +48,11 @@ export const createEnv = <
     serverEnv,
     (obj) => Array.from(obj.entries()),
     (pairs) => pairs.filter(([k]) => k.startsWith(PUBLIC_ENV_PREFIX)),
-    (pairs) => Object.fromEntries(pairs),
+    (pairs) => Object.fromEntries(pairs)
   ) as ClientEnv;
 
-  return { client: clientEnv, server: Object.fromEntries(serverEnv.entries()) as Env };
+  return {
+    client: clientEnv,
+    server: Object.fromEntries(serverEnv.entries()) as Env,
+  };
 };
