@@ -32,6 +32,10 @@
       "types": "./dist/env.d.ts",
       "default": "./dist/env.js"
     },
+    "./migrate": {
+      "types": "./dist/migrate.d.ts",
+      "default": "./dist/migrate.js"
+    },
     "./images": {
       "types": "./dist/images.d.ts",
       "default": "./dist/images.js"
@@ -59,5 +63,5 @@
     "tsup": "^8.0.1",
     "typescript": "^5.4.5"
   },
-  "version": "0.0.9"
+  "version": "0.0.10"
 }

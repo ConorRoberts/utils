@@ -12,5 +12,6 @@ export default defineConfig({
     logger: "src/logger.ts",
     env: "src/env.ts",
     images: "src/images.ts",
+    migrate: "src/migrate.ts",
   },
 });
