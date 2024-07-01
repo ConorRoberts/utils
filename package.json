@@ -32,6 +32,10 @@
       "types": "./dist/env.d.ts",
       "default": "./dist/env.js"
     },
+    "./migrate": {
+      "types": "./dist/migrate.d.ts",
+      "default": "./dist/migrate.js"
+    },
     "./images": {
       "types": "./dist/images.d.ts",
       "default": "./dist/images.js"
