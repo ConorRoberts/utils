@@ -7,7 +7,8 @@ const timeColumns = {
     .$defaultFn(() => new Date()),
   updatedAt: int("updated_at", { mode: "timestamp_ms" })
     .notNull()
-    .$defaultFn(() => new Date()),
+    .$defaultFn(() => new Date())
+    .$onUpdate(() => new Date()),
 };
 
 const commonColumns = {
