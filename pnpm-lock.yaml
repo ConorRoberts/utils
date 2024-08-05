@@ -42,8 +42,8 @@ importers:
         specifier: ^1.10.2
         version: 1.10.2(ioredis@5.4.1)
       valibot:
-        specifier: 0.35.0
-        version: 0.35.0
+        specifier: 0.37.0
+        version: 0.37.0(typescript@5.5.2)
     devDependencies:
       '@biomejs/biome':
         specifier: ^1.8.3
@@ -1493,8 +1493,13 @@ packages:
   uqr@0.1.2:
     resolution: {integrity: sha512-MJu7ypHq6QasgF5YRTjqscSzQp/W11zoUk6kvmlH+fmWEs63Y0Eib13hYFwAzagRJcVY8WVnlV+eBDUGMJ5IbA==}
 
-  valibot@0.35.0:
-    resolution: {integrity: sha512-+i2aCRkReTrd5KBN/dW2BrPOvFnU5LXTV2xjZnjnqUIO8YUx6P2+MgRrkwF2FhkexgyKq/NIZdPdknhHf5A/Ww==}
+  valibot@0.37.0:
+    resolution: {integrity: sha512-FQz52I8RXgFgOHym3XHYSREbNtkgSjF9prvMFH1nBsRyfL6SfCzoT1GuSDTlbsuPubM7/6Kbw0ZMQb8A+V+VsQ==}
+    peerDependencies:
+      typescript: '>=5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   web-streams-polyfill@3.3.3:
     resolution: {integrity: sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw==}
@@ -2757,7 +2762,9 @@ snapshots:
 
   uqr@0.1.2: {}
 
-  valibot@0.35.0: {}
+  valibot@0.37.0(typescript@5.5.2):
+    optionalDependencies:
+      typescript: 5.5.2
 
   web-streams-polyfill@3.3.3: {}
 
