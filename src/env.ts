@@ -21,7 +21,7 @@ export const createEnv = <
   const serverEnv = new Map();
 
   for (const [key, value] of pairs) {
-    const result = v.safeParse(value, args.env[key] ?? null);
+    const result = v.safeParse(value, args.env[key]);
 
     if (!result.success) {
       console.error(`Environment variable "${key}" is invalid`);
