@@ -14,10 +14,10 @@ export const createEnv = <
     [K in keyof Schema]: v.InferOutput<Schema[K]>;
   }
 >(args: {
-  schema: Schema;
+  schema: (valibot: typeof v) => Schema;
   env: any;
 }) => {
-  const pairs = Object.entries(args.schema);
+  const pairs = Object.entries(args.schema(v));
   const serverEnv = new Map();
 
   for (const [key, value] of pairs) {
