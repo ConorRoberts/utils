@@ -27,7 +27,7 @@ export interface CreateImageUrlResponse {
     uploadURL: string;
   };
   success: boolean;
-  errors: unknown[];
+  errors: { code: string; message: string }[];
   messages: unknown[];
 }
 
@@ -40,7 +40,7 @@ interface UploadImageResponse {
     variants: string[];
   };
   success: boolean;
-  errors: unknown[];
+  errors: { code: string; message: string }[];
   messages: unknown[];
 }
 
@@ -194,7 +194,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
     const headers = new Headers();
     headers.set("Authorization", `Bearer ${args.apiKey}`);
 
-    const response = await fetch(
+    const response = await ofetch<UploadImageResponse>(
       `https://api.cloudflare.com/client/v4/accounts/${this.accountHash}/images/v1`,
       {
         method: "POST",
@@ -203,7 +203,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
       }
     );
 
-    return response.json();
+    return response;
   }
 
   public async delete(id: string, args: { apiKey: string }) {
