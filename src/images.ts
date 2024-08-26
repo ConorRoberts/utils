@@ -186,17 +186,18 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
     return downloadUrl;
   }
 
-  public async upload(data: Blob, args: { apiKey: string }) {
+  public async upload(data: Blob, args: { apiKey: string; name: string }) {
     const formData = new FormData();
     formData.append("file", data, createId());
+
+    const headers = new Headers();
+    headers.set("Authorization", `Bearer ${args.apiKey}`);
 
     const response = await fetch(
       `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/images/v1`,
       {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${args.apiKey}`,
-        },
+        headers,
         body: formData,
       }
     );
