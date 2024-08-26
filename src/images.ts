@@ -46,7 +46,7 @@ interface UploadImageResponse {
 
 export class ImageUtils<ImageIds extends Record<string, any>> {
   private blacklist: string[] = ["img.clerk.com"];
-  private account: string;
+  private _accountId: string;
   private _imageIds: ImageIds | undefined;
 
   constructor(args: {
@@ -54,7 +54,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
     blacklist?: string[];
     imageIds?: ImageIds;
   }) {
-    this.account = args.accountId;
+    this._accountId = args.accountId;
 
     this._imageIds = args.imageIds;
 
@@ -71,8 +71,12 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
     return this._imageIds;
   }
 
+  get accountId() {
+    return this._accountId;
+  }
+
   public url(id: string) {
-    return `https://imagedelivery.net/${this.account}/${id}/public`;
+    return `https://imagedelivery.net/${this.accountId}/${id}/public`;
   }
 
   private isBlacklisted(url: string) {
@@ -144,7 +148,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
           form.append("expiry", dayjs().add(5, "minute").toISOString());
 
           const img = await ofetch<CreateImageUrlResponse>(
-            `https://api.cloudflare.com/client/v4/accounts/${this.account}/images/v2/direct_upload`,
+            `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/images/v2/direct_upload`,
             { method: "POST", headers, body: form }
           );
 
@@ -192,7 +196,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
       headers.set("Authorization", `Bearer ${args.apiKey}`);
 
       await ofetch(
-        `https://api.cloudflare.com/client/v4/accounts/${this.account}/images/v1/${id}`,
+        `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/images/v1/${id}`,
         {
           method: "POST",
           headers,
