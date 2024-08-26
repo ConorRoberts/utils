@@ -46,15 +46,15 @@ interface UploadImageResponse {
 
 export class ImageUtils<ImageIds extends Record<string, any>> {
   private blacklist: string[] = ["img.clerk.com"];
-  private _accountId: string;
+  private _accountHash: string;
   private _imageIds: ImageIds | undefined;
 
   constructor(args: {
-    accountId: string;
+    accountHash: string;
     blacklist?: string[];
     imageIds?: ImageIds;
   }) {
-    this._accountId = args.accountId;
+    this._accountHash = args.accountHash;
 
     this._imageIds = args.imageIds;
 
@@ -71,12 +71,12 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
     return this._imageIds;
   }
 
-  get accountId() {
-    return this._accountId;
+  get accountHash() {
+    return this._accountHash;
   }
 
   public url(id: string) {
-    return `https://imagedelivery.net/${this.accountId}/${id}/public`;
+    return `https://imagedelivery.net/${this.accountHash}/${id}/public`;
   }
 
   private isBlacklisted(url: string) {
@@ -148,7 +148,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
           form.append("expiry", dayjs().add(5, "minute").toISOString());
 
           const img = await ofetch<CreateImageUrlResponse>(
-            `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/images/v2/direct_upload`,
+            `https://api.cloudflare.com/client/v4/accounts/${this.accountHash}/images/v2/direct_upload`,
             { method: "POST", headers, body: form }
           );
 
@@ -195,7 +195,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
     headers.set("Authorization", `Bearer ${args.apiKey}`);
 
     const response = await fetch(
-      `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/images/v1`,
+      `https://api.cloudflare.com/client/v4/accounts/${this.accountHash}/images/v1`,
       {
         method: "POST",
         headers,
@@ -216,7 +216,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
       headers.set("Authorization", `Bearer ${args.apiKey}`);
 
       await ofetch(
-        `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/images/v1/${id}`,
+        `https://api.cloudflare.com/client/v4/accounts/${this.accountHash}/images/v1/${id}`,
         {
           method: "POST",
           headers,
