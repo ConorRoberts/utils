@@ -167,7 +167,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
     return urls;
   }
 
-  public async upload(url: string, body: FormData) {
+  public async clientUpload(url: string, body: FormData) {
     const fetchResponse = await ofetch<UploadImageResponse>(url, {
       method: "POST",
       body,
@@ -184,6 +184,24 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
     }
 
     return downloadUrl;
+  }
+
+  public async upload(data: Blob, args: { apiKey: string }) {
+    const formData = new FormData();
+    formData.append("file", data, createId());
+
+    const response = await fetch(
+      `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/images/v1`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${args.apiKey}`,
+        },
+        body: formData,
+      }
+    );
+
+    return response.json();
   }
 
   public async delete(id: string, args: { apiKey: string }) {
@@ -216,7 +234,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
         const formData = new FormData();
         formData.append("file", e.file);
 
-        const downloadUrl = await this.upload(e.url.value, formData);
+        const downloadUrl = await this.clientUpload(e.url.value, formData);
 
         return {
           url: downloadUrl,
