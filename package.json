@@ -55,6 +55,7 @@
   "license": "ISC",
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
+    "@types/node": "22.8.1",
     "tsup": "^8.0.1",
     "typescript": "^5.4.5"
   },
