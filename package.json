@@ -12,25 +12,10 @@
     "dist/**"
   ],
   "exports": {
-    "./logger": {
-      "types": "./dist/logger.d.ts",
-      "default": "./dist/logger.js",
-      "require": "./dist/logger.cjs"
-    },
-    "./cache": {
-      "types": "./dist/cache.d.ts",
-      "default": "./dist/cache.js",
-      "require": "./dist/cache.cjs"
-    },
     "./env": {
       "types": "./dist/env.d.ts",
       "default": "./dist/env.js",
       "require": "./dist/env.cjs"
-    },
-    "./migrate": {
-      "types": "./dist/migrate.d.ts",
-      "default": "./dist/migrate.js",
-      "require": "./dist/migrate.cjs"
     },
     "./images": {
       "types": "./dist/images.d.ts",
@@ -39,25 +24,19 @@
     }
   },
   "dependencies": {
-    "@logtail/pino": "^0.4.17",
-    "@paralleldrive/cuid2": "^2.2.2",
-    "dayjs": "^1.11.11",
-    "ioredis": "^5.4.1",
-    "ofetch": "^1.3.4",
-    "pino": "^9.1.0",
-    "pino-pretty": "^10.3.1",
-    "remeda": "^2.0.10",
-    "unstorage": "^1.10.2",
-    "valibot": "0.42.0"
+    "dayjs": "1.11.19",
+    "nanoid": "5.1.6",
+    "ofetch": "1.5.1",
+    "remeda": "2.32.0",
+    "valibot": "1.1.0"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@biomejs/biome": "^1.8.3",
-    "@types/node": "22.8.1",
-    "tsup": "^8.0.1",
-    "typescript": "^5.4.5"
+    "@biomejs/biome": "1.8.3",
+    "tsup": "8.5.0",
+    "typescript": "5.9.3"
   },
-  "version": "0.0.26"
+  "version": "0.0.12"
 }

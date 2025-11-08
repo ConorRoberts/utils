@@ -1,4 +1,4 @@
-import { createId } from "@paralleldrive/cuid2";
+import { nanoid } from "nanoid";
 import dayjs from "dayjs";
 import { ofetch } from "ofetch";
 
@@ -27,7 +27,7 @@ export interface CreateImageUrlResponse {
     uploadURL: string;
   };
   success: boolean;
-  errors: { code: string; message: string }[];
+  errors: unknown[];
   messages: unknown[];
 }
 
@@ -40,24 +40,21 @@ interface UploadImageResponse {
     variants: string[];
   };
   success: boolean;
-  errors: { code: string; message: string }[];
+  errors: unknown[];
   messages: unknown[];
 }
 
 export class ImageUtils<ImageIds extends Record<string, any>> {
   private blacklist: string[] = ["img.clerk.com"];
-  private _accountHash: string;
-  private _accountId: string;
+  private account: string;
   private _imageIds: ImageIds | undefined;
 
   constructor(args: {
-    accountHash: string;
     accountId: string;
     blacklist?: string[];
     imageIds?: ImageIds;
   }) {
-    this._accountHash = args.accountHash;
-    this._accountId = args.accountId;
+    this.account = args.accountId;
 
     this._imageIds = args.imageIds;
 
@@ -74,16 +71,8 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
     return this._imageIds;
   }
 
-  get accountHash() {
-    return this._accountHash;
-  }
-
-  get accountId() {
-    return this._accountId;
-  }
-
   public url(id: string) {
-    return `https://imagedelivery.net/${this.accountHash}/${id}/public`;
+    return `https://imagedelivery.net/${this.account}/${id}/public`;
   }
 
   private isBlacklisted(url: string) {
@@ -150,13 +139,13 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
       Array.from({ length: count }).map(async () => {
         try {
           const form = new FormData();
-          const id = createId();
+          const id = nanoid();
           form.append("id", id);
           form.append("expiry", dayjs().add(5, "minute").toISOString());
 
           const img = await ofetch<CreateImageUrlResponse>(
-            `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/images/v2/direct_upload`,
-            { method: "POST", headers, body: form }
+            `https://api.cloudflare.com/client/v4/accounts/${this.account}/images/v2/direct_upload`,
+            { method: "POST", headers, body: form },
           );
 
           if (!img.success) {
@@ -168,13 +157,13 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
           console.error("Error uploading image");
           throw e;
         }
-      })
+      }),
     );
 
     return urls;
   }
 
-  public async clientUpload(url: string, body: FormData) {
+  public async upload(url: string, body: FormData) {
     const fetchResponse = await ofetch<UploadImageResponse>(url, {
       method: "POST",
       body,
@@ -193,26 +182,6 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
     return downloadUrl;
   }
 
-  public async upload(data: Blob, args: { apiKey: string; id?: string }) {
-    const formData = new FormData();
-    formData.set("file", data, "file.png");
-    formData.set("id", args.id ?? createId());
-
-    const headers = new Headers();
-    headers.set("Authorization", `Bearer ${args.apiKey}`);
-
-    const response = await ofetch<UploadImageResponse>(
-      `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/images/v1`,
-      {
-        method: "POST",
-        headers,
-        body: formData,
-      }
-    );
-
-    return response;
-  }
-
   public async delete(id: string, args: { apiKey: string }) {
     if (this.isProtected(id)) {
       return { success: true };
@@ -222,34 +191,29 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
       const headers = new Headers();
       headers.set("Authorization", `Bearer ${args.apiKey}`);
 
-      await ofetch(
-        `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/images/v1/${id}`,
-        {
-          method: "POST",
-          headers,
-        }
-      );
+      await ofetch(`https://api.cloudflare.com/client/v4/accounts/${this.account}/images/v1/${id}`, {
+        method: "POST",
+        headers,
+      });
       return { success: true };
-    } catch (_e) {
+    } catch {
       return { success: false };
     }
   }
 
-  public async batchUpload(
-    files: { file: File; url: { id: string; value: string } }[]
-  ) {
+  public async batchUpload(files: { file: File; url: { id: string; value: string } }[]) {
     return await Promise.all(
       files.map(async (e) => {
         const formData = new FormData();
         formData.append("file", e.file);
 
-        const downloadUrl = await this.clientUpload(e.url.value, formData);
+        const downloadUrl = await this.upload(e.url.value, formData);
 
         return {
           url: downloadUrl,
           id: e.url.id,
         };
-      })
+      }),
     );
   }
 }

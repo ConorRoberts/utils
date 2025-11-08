@@ -9,20 +9,19 @@ const PUBLIC_ENV_PREFIX = "PUBLIC_" as const;
  * @returns An object containing client environment variables and another containing server environment variables
  */
 export const createEnv = <
-  EnvInput extends Record<string, unknown>,
   Schema extends Record<string, v.GenericSchema>,
   Env = {
     [K in keyof Schema]: v.InferOutput<Schema[K]>;
   }
 >(args: {
-  schema: (valibot: typeof v) => Schema;
-  env: EnvInput;
+  schema: Schema;
+  env: any;
 }) => {
-  const pairs = Object.entries(args.schema(v));
+  const pairs = Object.entries(args.schema);
   const serverEnv = new Map();
 
   for (const [key, value] of pairs) {
-    const result = v.safeParse(value, args.env[key]);
+    const result = v.safeParse(value, args.env[key] ?? null);
 
     if (!result.success) {
       console.error(`Environment variable "${key}" is invalid`);
