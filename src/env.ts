@@ -12,30 +12,33 @@ export const createEnv = <
   Schema extends Record<string, v.GenericSchema>,
   Env = {
     [K in keyof Schema]: v.InferOutput<Schema[K]>;
-  }
+  },
 >(args: {
   schema: Schema;
   env: any;
 }) => {
   const pairs = Object.entries(args.schema);
   const serverEnv = new Map();
+  const invalidKeys: string[] = [];
 
   for (const [key, value] of pairs) {
     const result = v.safeParse(value, args.env[key] ?? null);
 
     if (!result.success) {
-      console.error(`Environment variable "${key}" is invalid`);
-      process.exit(1);
+      invalidKeys.push(key);
     }
 
     serverEnv.set(key, result.output);
   }
 
+  if (invalidKeys.length > 0) {
+    console.error(`Invalid environment variable(s): ${invalidKeys.map((e) => `"${e}"`).join(", ")}`);
+    process.exit(1);
+  }
+
   type ClientEnvKeys = Exclude<
     {
-      [K in keyof Env]: K extends `${typeof PUBLIC_ENV_PREFIX}${string}`
-        ? K
-        : never;
+      [K in keyof Env]: K extends `${typeof PUBLIC_ENV_PREFIX}${string}` ? K : never;
     }[keyof Env],
     undefined
   >;
@@ -48,7 +51,7 @@ export const createEnv = <
     serverEnv,
     (obj) => Array.from(obj.entries()),
     (pairs) => pairs.filter(([k]) => k.startsWith(PUBLIC_ENV_PREFIX)),
-    (pairs) => Object.fromEntries(pairs)
+    (pairs) => Object.fromEntries(pairs),
   ) as ClientEnv;
 
   return {
