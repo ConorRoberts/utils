@@ -46,15 +46,18 @@ interface UploadImageResponse {
 
 export class ImageUtils<ImageIds extends Record<string, any>> {
   private blacklist: string[] = ["img.clerk.com"];
-  private account: string;
+  private accountId: string;
+  private accountHash: string;
   private _imageIds: ImageIds | undefined;
 
   constructor(args: {
     accountId: string;
+    accountHash: string;
     blacklist?: string[];
     imageIds?: ImageIds;
   }) {
-    this.account = args.accountId;
+    this.accountId = args.accountId;
+    this.accountHash = args.accountHash;
 
     this._imageIds = args.imageIds;
 
@@ -72,7 +75,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
   }
 
   public url(id: string) {
-    return `https://imagedelivery.net/${this.account}/${id}/public`;
+    return `https://imagedelivery.net/${this.accountHash}/${id}/public`;
   }
 
   private isBlacklisted(url: string) {
@@ -144,7 +147,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
           form.append("expiry", dayjs().add(5, "minute").toISOString());
 
           const img = await ofetch<CreateImageUrlResponse>(
-            `https://api.cloudflare.com/client/v4/accounts/${this.account}/images/v2/direct_upload`,
+            `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/images/v2/direct_upload`,
             { method: "POST", headers, body: form },
           );
 
@@ -161,6 +164,22 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
     );
 
     return urls;
+  }
+
+  public async serverUpload(data: Blob, args: { apiKey: string; name: string }) {
+    const formData = new FormData();
+    formData.append("file", data, name ?? nanoid());
+
+    const headers = new Headers();
+    headers.set("Authorization", `Bearer ${args.apiKey}`);
+
+    const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${this.accountId}/images/v1`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+
+    return response.json();
   }
 
   public async upload(url: string, body: FormData) {
@@ -191,7 +210,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
       const headers = new Headers();
       headers.set("Authorization", `Bearer ${args.apiKey}`);
 
-      await ofetch(`https://api.cloudflare.com/client/v4/accounts/${this.account}/images/v1/${id}`, {
+      await ofetch(`https://api.cloudflare.com/client/v4/accounts/${this.accountId}/images/v1/${id}`, {
         method: "POST",
         headers,
       });
