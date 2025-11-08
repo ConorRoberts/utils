@@ -14,13 +14,11 @@
   "exports": {
     "./env": {
       "types": "./dist/env.d.ts",
-      "default": "./dist/env.js",
-      "require": "./dist/env.cjs"
+      "default": "./dist/env.js"
     },
     "./images": {
       "types": "./dist/images.d.ts",
-      "default": "./dist/images.js",
-      "require": "./dist/images.cjs"
+      "default": "./dist/images.js"
     }
   },
   "dependencies": {
@@ -35,6 +33,7 @@
   "license": "ISC",
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
+    "@types/node": "24.10.0",
     "tsup": "8.5.0",
     "typescript": "5.9.3"
   },

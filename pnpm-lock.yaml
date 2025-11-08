@@ -27,6 +27,9 @@ importers:
       '@biomejs/biome':
         specifier: 1.8.3
         version: 1.8.3
+      '@types/node':
+        specifier: 24.10.0
+        version: 24.10.0
       tsup:
         specifier: 8.5.0
         version: 8.5.0(postcss@8.4.39)(typescript@5.9.3)(yaml@2.4.5)
@@ -386,6 +389,9 @@ packages:
 
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
+
+  '@types/node@24.10.0':
+    resolution: {integrity: sha512-qzQZRBqkFsYyaSWXuEHc2WR9c0a0CXwiE5FWUvn7ZM+vdy1uZLfCunD38UzhuB7YN/J11ndbDBcTmOdxJo9Q7A==}
 
   acorn@8.15.0:
     resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
@@ -748,6 +754,9 @@ packages:
   ufo@1.6.1:
     resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
 
+  undici-types@7.16.0:
+    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
+
   valibot@1.1.0:
     resolution: {integrity: sha512-Nk8lX30Qhu+9txPYTwM0cFlWLdPFsFr6LblzqIySfbZph9+BFsAHsNvHOymEviUepeIW6KFHzpX8TKhbptBXXw==}
     peerDependencies:
@@ -993,6 +1002,10 @@ snapshots:
     optional: true
 
   '@types/estree@1.0.8': {}
+
+  '@types/node@24.10.0':
+    dependencies:
+      undici-types: 7.16.0
 
   acorn@8.15.0: {}
 
@@ -1351,6 +1364,8 @@ snapshots:
   typescript@5.9.3: {}
 
   ufo@1.6.1: {}
+
+  undici-types@7.16.0: {}
 
   valibot@1.1.0(typescript@5.9.3):
     optionalDependencies:
