@@ -1,82 +1,82 @@
 {
-	"name": "@conorroberts/utils",
-	"description": "",
-	"private": false,
-	"type": "module",
-	"scripts": {
-		"dev": "tsdown --watch",
-		"build": "tsc --noEmit && tsdown",
-		"build:clean": "tsc --noEmit && tsdown --clean"
-	},
-	"files": [
-		"dist/**"
-	],
-	"exports": {
-		"./env": {
-			"types": "./dist/env.d.ts",
-			"default": "./dist/env.js"
-		},
-		"./images": {
-			"types": "./dist/images.d.ts",
-			"default": "./dist/images.js"
-		},
-		"./oxlint/config": {
-			"default": "./dist/oxlint/config.json"
-		},
-		"./oxlint/jsx-component-pascal-case": {
-			"types": "./dist/oxlint/jsx-component-pascal-case.d.ts",
-			"default": "./dist/oxlint/jsx-component-pascal-case.js"
-		},
-		"./oxlint/no-component-date-instantiation": {
-			"types": "./dist/oxlint/no-component-date-instantiation.d.ts",
-			"default": "./dist/oxlint/no-component-date-instantiation.js"
-		},
-		"./oxlint/no-emoji": {
-			"types": "./dist/oxlint/no-emoji.d.ts",
-			"default": "./dist/oxlint/no-emoji.js"
-		},
-		"./oxlint/no-finally": {
-			"types": "./dist/oxlint/no-finally.d.ts",
-			"default": "./dist/oxlint/no-finally.js"
-		},
-		"./oxlint/no-inline-components": {
-			"types": "./dist/oxlint/no-inline-components.d.ts",
-			"default": "./dist/oxlint/no-inline-components.js"
-		},
-		"./oxlint/no-react-namespace": {
-			"types": "./dist/oxlint/no-react-namespace.d.ts",
-			"default": "./dist/oxlint/no-react-namespace.js"
-		},
-		"./oxlint/no-switch-plugin": {
-			"types": "./dist/oxlint/no-switch-plugin.d.ts",
-			"default": "./dist/oxlint/no-switch-plugin.js"
-		},
-		"./oxlint/no-top-level-let": {
-			"types": "./dist/oxlint/no-top-level-let.d.ts",
-			"default": "./dist/oxlint/no-top-level-let.js"
-		},
-		"./oxlint/no-type-cast": {
-			"types": "./dist/oxlint/no-type-cast.d.ts",
-			"default": "./dist/oxlint/no-type-cast.js"
-		}
-	},
-	"dependencies": {
-		"dayjs": "1.11.19",
-		"nanoid": "5.1.6",
-		"ofetch": "1.5.1",
-		"oxlint": "1.32.0",
-		"remeda": "2.32.0",
-		"valibot": "1.1.0"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"devDependencies": {
-		"@biomejs/biome": "1.8.3",
-		"@types/node": "24.10.0",
-		"tsdown": "0.17.2",
-		"typescript": "5.9.3",
-		"vitest": "4.0.15"
-	},
-	"version": "0.0.39"
+  "name": "@conorroberts/utils",
+  "description": "",
+  "private": false,
+  "type": "module",
+  "scripts": {
+    "dev": "tsdown --watch",
+    "build": "tsc --noEmit && tsdown",
+    "build:clean": "tsc --noEmit && tsdown --clean"
+  },
+  "files": [
+    "dist/**"
+  ],
+  "exports": {
+    "./env": {
+      "types": "./dist/env.d.mts",
+      "default": "./dist/env.mjs"
+    },
+    "./images": {
+      "types": "./dist/images.d.mts",
+      "default": "./dist/images.mjs"
+    },
+    "./oxlint/config": {
+      "default": "./dist/oxlint/config.mjson"
+    },
+    "./oxlint/jsx-component-pascal-case": {
+      "types": "./dist/oxlint/jsx-component-pascal-case.d.mts",
+      "default": "./dist/oxlint/jsx-component-pascal-case.mjs"
+    },
+    "./oxlint/no-component-date-instantiation": {
+      "types": "./dist/oxlint/no-component-date-instantiation.d.mts",
+      "default": "./dist/oxlint/no-component-date-instantiation.mjs"
+    },
+    "./oxlint/no-emoji": {
+      "types": "./dist/oxlint/no-emoji.d.mts",
+      "default": "./dist/oxlint/no-emoji.mjs"
+    },
+    "./oxlint/no-finally": {
+      "types": "./dist/oxlint/no-finally.d.mts",
+      "default": "./dist/oxlint/no-finally.mjs"
+    },
+    "./oxlint/no-inline-components": {
+      "types": "./dist/oxlint/no-inline-components.d.mts",
+      "default": "./dist/oxlint/no-inline-components.mjs"
+    },
+    "./oxlint/no-react-namespace": {
+      "types": "./dist/oxlint/no-react-namespace.d.mts",
+      "default": "./dist/oxlint/no-react-namespace.mjs"
+    },
+    "./oxlint/no-switch-plugin": {
+      "types": "./dist/oxlint/no-switch-plugin.d.mts",
+      "default": "./dist/oxlint/no-switch-plugin.mjs"
+    },
+    "./oxlint/no-top-level-let": {
+      "types": "./dist/oxlint/no-top-level-let.d.mts",
+      "default": "./dist/oxlint/no-top-level-let.mjs"
+    },
+    "./oxlint/no-type-cast": {
+      "types": "./dist/oxlint/no-type-cast.d.mts",
+      "default": "./dist/oxlint/no-type-cast.mjs"
+    }
+  },
+  "dependencies": {
+    "dayjs": "1.11.19",
+    "nanoid": "5.1.6",
+    "ofetch": "1.5.1",
+    "oxlint": "1.32.0",
+    "remeda": "2.32.0",
+    "valibot": "1.1.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3",
+    "@types/node": "24.10.0",
+    "tsdown": "0.17.2",
+    "typescript": "5.9.3",
+    "vitest": "4.0.15"
+  },
+  "version": "0.0.39"
 }
