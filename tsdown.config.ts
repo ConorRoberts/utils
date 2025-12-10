@@ -8,6 +8,7 @@ export default defineConfig({
   entry: {
     env: "src/env.ts",
     images: "src/images.ts",
+    "oxlint/config": "src/.oxlintrc.json",
     "oxlint/jsx-component-pascal-case": "src/oxlint-plugins/jsx-component-pascal-case.js",
     "oxlint/no-component-date-instantiation": "src/oxlint-plugins/no-component-date-instantiation.js",
     "oxlint/no-emoji": "src/oxlint-plugins/no-emoji.js",

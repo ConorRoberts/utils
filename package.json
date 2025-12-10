@@ -8,9 +8,7 @@
 		"build": "tsc --noEmit && tsdown",
 		"build:clean": "tsc --noEmit && tsdown --clean"
 	},
-	"files": [
-		"dist/**"
-	],
+	"files": ["dist/**"],
 	"exports": {
 		"./env": {
 			"types": "./dist/env.d.ts",
@@ -19,6 +17,9 @@
 		"./images": {
 			"types": "./dist/images.d.ts",
 			"default": "./dist/images.js"
+		},
+		"./oxlint/config": {
+			"default": "./dist/oxlint/config.js"
 		},
 		"./oxlint/jsx-component-pascal-case": {
 			"types": "./dist/oxlint/jsx-component-pascal-case.d.ts",

@@ -15,6 +15,7 @@ export const createEnv = <
   },
 >(args: {
   schema: Schema;
+  // oxlint-disable-next-line no-explicit-any
   env: any;
 }) => {
   const pairs = Object.entries(args.schema);
