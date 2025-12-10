@@ -8,7 +8,9 @@
 		"build": "tsc --noEmit && tsdown",
 		"build:clean": "tsc --noEmit && tsdown --clean"
 	},
-	"files": ["dist/**"],
+	"files": [
+		"dist/**"
+	],
 	"exports": {
 		"./env": {
 			"types": "./dist/env.d.ts",
@@ -73,5 +75,5 @@
 		"typescript": "5.9.3",
 		"vitest": "4.0.15"
 	},
-	"version": "0.0.35"
+	"version": "0.0.36"
 }
