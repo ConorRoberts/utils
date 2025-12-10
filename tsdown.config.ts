@@ -1,4 +1,5 @@
 import { defineConfig } from "tsdown";
+import { copyFileSync, mkdirSync } from "node:fs";
 
 export default defineConfig({
   format: ["esm"],
@@ -8,7 +9,6 @@ export default defineConfig({
   entry: {
     env: "src/env.ts",
     images: "src/images.ts",
-    "oxlint/config": "src/.oxlintrc.json",
     "oxlint/jsx-component-pascal-case": "src/oxlint-plugins/jsx-component-pascal-case.js",
     "oxlint/no-component-date-instantiation": "src/oxlint-plugins/no-component-date-instantiation.js",
     "oxlint/no-emoji": "src/oxlint-plugins/no-emoji.js",
@@ -18,5 +18,14 @@ export default defineConfig({
     "oxlint/no-switch-plugin": "src/oxlint-plugins/no-switch-plugin.js",
     "oxlint/no-top-level-let": "src/oxlint-plugins/no-top-level-let.js",
     "oxlint/no-type-cast": "src/oxlint-plugins/no-type-cast.js",
+  },
+  onSuccess: async () => {
+    const targetDir = "dist/oxlint";
+    const targetFile = `${targetDir}/config.json`;
+
+    mkdirSync(targetDir, { recursive: true });
+    copyFileSync("src/oxlint-config.json", targetFile);
+
+    console.log("✓ Copied oxlint-config.json to dist/oxlint/config.json");
   },
 });

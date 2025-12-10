@@ -63,6 +63,6 @@
 				"@typescript-eslint/no-explicit-any": "off",
 				"no-type-cast/no-type-cast": "off"
 			}
-		},
+		}
 	]
 }
