@@ -9,6 +9,7 @@ export default defineConfig({
   entry: {
     env: "src/env.ts",
     images: "src/images.ts",
+    react: "src/react/index.ts",
     "oxlint/jsx-component-pascal-case": "src/oxlint-plugins/jsx-component-pascal-case.js",
     "oxlint/no-component-date-instantiation": "src/oxlint-plugins/no-component-date-instantiation.js",
     "oxlint/no-emoji": "src/oxlint-plugins/no-emoji.js",
@@ -28,4 +29,5 @@ export default defineConfig({
 
     console.log("✓ Copied oxlint-config.json to dist/oxlint/config.json");
   },
+  external: ["react"],
 });

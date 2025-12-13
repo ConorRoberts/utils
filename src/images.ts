@@ -190,7 +190,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
     return urls;
   }
 
-  public async serverUpload(data: Blob, args: { id: string; apiKey: string }) {
+  public async serverUpload(data: Blob, args: { id?: string; apiKey: string }) {
     const formData = new FormData();
     formData.append("file", data, nanoid());
 
