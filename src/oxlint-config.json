@@ -23,6 +23,7 @@
 	],
 	"settings": {},
 	"rules": {
+		"@typescript-eslint/no-floating-promises": "off",
 		"@typescript-eslint/no-explicit-any": "error",
 		"@typescript-eslint/no-non-null-assertion": "error",
 		"react/button-has-type": "deny",
