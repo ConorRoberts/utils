@@ -179,7 +179,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
       body: formData,
     });
 
-    return response.json();
+    return { id: response, response: await response.json() };
   }
 
   public async upload(url: string, body: FormData) {
