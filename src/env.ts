@@ -23,7 +23,7 @@ export const createEnv = <
   const invalidKeys: string[] = [];
 
   for (const [key, value] of pairs) {
-    const result = v.safeParse(value, args.env[key] ?? null);
+    const result = v.safeParse(value, args.env[key]);
 
     if (!result.success) {
       invalidKeys.push(key);
