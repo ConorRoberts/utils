@@ -44,6 +44,30 @@ interface UploadImageResponse {
   messages: unknown[];
 }
 
+interface CloudflareImagesV1Response {
+  result: {
+    images: CloudflareImage[];
+  };
+  success: boolean;
+  errors: CloudflareApiError[];
+  messages: string[];
+}
+
+interface CloudflareImage {
+  id: string; // Unique image identifier
+  filename: string; // Original filename
+  uploaded: string; // ISO 8601 date-time string
+  requireSignedURLs: boolean;
+  variants: string[]; // Array of URLs for the image variants
+  meta?: Record<string, any>; // User modifiable key-value store (max 1024 bytes)
+  creator?: string | null; // Internal user ID (optional)
+}
+
+interface CloudflareApiError {
+  code: number;
+  message: string;
+}
+
 export class ImageUtils<ImageIds extends Record<string, any>> {
   private blacklist: string[] = ["img.clerk.com"];
   private accountId: string;
@@ -166,7 +190,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
     return urls;
   }
 
-  public async serverUpload(data: Blob, args: { apiKey: string }) {
+  public async serverUpload(data: Blob, args: { id: string; apiKey: string }) {
     const formData = new FormData();
     formData.append("file", data, nanoid());
 
@@ -179,7 +203,9 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
       body: formData,
     });
 
-    return { id: response, response: await response.json() };
+    const json: CloudflareImagesV1Response = await response.json();
+
+    return json;
   }
 
   public async upload(url: string, body: FormData) {
