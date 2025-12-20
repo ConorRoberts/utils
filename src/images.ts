@@ -192,7 +192,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
 
   public async serverUpload(data: Blob, args: { id?: string; apiKey: string }) {
     const formData = new FormData();
-    formData.append("file", data, nanoid());
+    formData.append("file", data, args.id ?? nanoid());
 
     const headers = new Headers();
     headers.set("Authorization", `Bearer ${args.apiKey}`);
