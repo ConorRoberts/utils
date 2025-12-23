@@ -14,6 +14,7 @@ export default defineConfig({
     "oxlint/no-component-date-instantiation": "src/oxlint-plugins/no-component-date-instantiation.js",
     "oxlint/no-emoji": "src/oxlint-plugins/no-emoji.js",
     "oxlint/no-finally": "src/oxlint-plugins/no-finally.js",
+    "oxlint/no-function-call-in-jsx": "src/oxlint-plugins/no-function-call-in-jsx.js",
     "oxlint/no-inline-components": "src/oxlint-plugins/no-inline-components.js",
     "oxlint/no-react-namespace": "src/oxlint-plugins/no-react-namespace.js",
     "oxlint/no-switch-plugin": "src/oxlint-plugins/no-switch-plugin.js",
