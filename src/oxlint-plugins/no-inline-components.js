@@ -71,9 +71,9 @@ export const getEnclosingFunction = (node) => {
     if (isFunctionLike(current)) {
       return current;
     }
-    return findFunction(isNode(current) ? (current.parent ?? null) : null);
+    return findFunction(isNode(current) ? current.parent ?? null : null);
   };
-  return findFunction(isNode(node) ? (node.parent ?? null) : null);
+  return findFunction(isNode(node) ? node.parent ?? null : null);
 };
 
 /**
@@ -88,16 +88,16 @@ const isFunctionUsedAsJsxProp = (node) => {
     if (isFunctionLike(current)) {
       return false;
     }
-    return checkJsxProp(isNode(current) ? (current.parent ?? null) : null);
+    return checkJsxProp(isNode(current) ? current.parent ?? null : null);
   };
-  return checkJsxProp(isNode(node) ? (node.parent ?? null) : null);
+  return checkJsxProp(isNode(node) ? node.parent ?? null : null);
 };
 
 /**
  * @param {FunctionLikeNode} node
  */
 const isFunctionImmediatelyInvoked = (node) => {
-  const parent = isNode(node) ? (node.parent ?? null) : null;
+  const parent = isNode(node) ? node.parent ?? null : null;
   if (!parent) return false;
 
   // Check if the function is the callee of a CallExpression (i.e., it's immediately invoked)
@@ -204,6 +204,14 @@ const expressionProducesJsx = (root, bindingNames) => {
     type === "ChainExpression"
   ) {
     return expressionProducesJsx(root.expression, bindingNames);
+  }
+
+  if (type === "CallExpression") {
+    return expressionProducesJsx(root.callee, bindingNames);
+  }
+
+  if (type === "MemberExpression") {
+    return expressionProducesJsx(root.object, bindingNames);
   }
 
   return false;
@@ -464,6 +472,39 @@ const rule = defineRule({
       fnCtx.jsxAssignments.push({ node: right, names });
     };
 
+    /**
+     * @param {import("oxlint").ESTree.CallExpression} node
+     */
+    const handleCallExpression = (node) => {
+      const fnCtx = currentFunction();
+      if (!fnCtx) return;
+
+      // Check for array.push(<JSX>)
+      if (
+        node.callee &&
+        node.callee.type === "MemberExpression" &&
+        node.callee.property &&
+        node.callee.property.type === "Identifier" &&
+        node.callee.property.name === "push"
+      ) {
+        const arrayObject = node.callee.object;
+        if (arrayObject && arrayObject.type === "Identifier") {
+          const arrayName = arrayObject.name;
+
+          // Check if any argument contains JSX
+          const hasJsxArgument = node.arguments.some((arg) => {
+            if (!arg || arg.type === "SpreadElement") return false;
+            return expressionContainsJsx(arg);
+          });
+
+          if (hasJsxArgument) {
+            fnCtx.jsxBindingNames.add(arrayName);
+            fnCtx.jsxAssignments.push({ node: node, names: [arrayName] });
+          }
+        }
+      }
+    };
+
     return /** @type {import("oxlint").VisitorWithHooks} */ ({
       FunctionDeclaration(node) {
         if (isFunctionLike(node)) enterFunction(node);
@@ -485,6 +526,9 @@ const rule = defineRule({
       },
       AssignmentExpression(node) {
         if (node.type === "AssignmentExpression") handleAssignmentExpression(node);
+      },
+      CallExpression(node) {
+        if (node.type === "CallExpression") handleCallExpression(node);
       },
     });
   },

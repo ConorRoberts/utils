@@ -692,4 +692,178 @@ describe("no-inline-components rule", () => {
       }),
     );
   });
+
+  it("reports when JSX is pushed into an array and that array is returned", () => {
+    const { report, visitor } = createRuleHarness(noInlineComponentsRule, "no-inline-components/test");
+
+    const component = createFunctionDeclaration("Component");
+    const componentBody = requireFunctionBody(component);
+
+    // Create array variable: const rows = []
+    const arrayDeclaration = createVariableDeclaration("const", componentBody);
+    const arrayDeclarator: ESTree.VariableDeclarator = {
+      type: "VariableDeclarator",
+      id: createIdentifier("rows"),
+      init: {
+        type: "ArrayExpression",
+        elements: [],
+        parent: null as unknown as ESTree.Node,
+        ...createSpan(),
+      } as unknown as ESTree.Expression,
+      parent: arrayDeclaration,
+      ...createSpan(),
+    };
+    const arrayInit = arrayDeclarator.init as ESTree.ArrayExpression;
+    arrayInit.parent = arrayDeclarator as unknown as ESTree.Node;
+    arrayDeclarator.id.parent = arrayDeclarator as unknown as ESTree.Node;
+    arrayDeclaration.declarations.push(arrayDeclarator);
+
+    // Create rows.push(<JSXElement />)
+    const jsxArg = createJSXElement("View");
+    const pushCall = {
+      type: "CallExpression" as const,
+      callee: {
+        type: "MemberExpression" as const,
+        object: createIdentifierReference("rows"),
+        property: createIdentifier("push"),
+        computed: false,
+        optional: false,
+        parent: null as unknown as ESTree.Node,
+        ...createSpan(),
+      } as unknown as ESTree.Expression,
+      arguments: [jsxArg as unknown as ESTree.Expression],
+      optional: false,
+      parent: null as unknown as ESTree.Node,
+      ...createSpan(),
+    };
+
+    const callExpression = pushCall as unknown as ESTree.CallExpression;
+    const memberExpr = callExpression.callee as ESTree.MemberExpression;
+    memberExpr.parent = callExpression;
+    memberExpr.object.parent = memberExpr as unknown as ESTree.Node;
+    memberExpr.property.parent = memberExpr as unknown as ESTree.Node;
+    jsxArg.parent = callExpression;
+
+    const pushStatement: ESTree.ExpressionStatement = {
+      type: "ExpressionStatement",
+      expression: callExpression,
+      ...createSpan(),
+      parent: componentBody,
+    };
+    callExpression.parent = pushStatement;
+
+    // Return rows
+    const returnStatement = createReturnStatement(createIdentifierReference("rows"));
+    returnStatement.parent = componentBody;
+
+    componentBody.body.push(arrayDeclaration, pushStatement, returnStatement);
+
+    const enterFn = visitor.FunctionDeclaration;
+    assert.isDefined(enterFn);
+    enterFn(component);
+
+    const variableVisitor = visitor.VariableDeclarator;
+    assert.isDefined(variableVisitor);
+    variableVisitor(arrayDeclarator);
+
+    const callVisitor = visitor.CallExpression;
+    assert.isDefined(callVisitor);
+    callVisitor(callExpression);
+
+    const returnVisitor = visitor.ReturnStatement;
+    assert.isDefined(returnVisitor);
+    returnVisitor(returnStatement);
+
+    const exitFn = visitor["FunctionDeclaration:exit"];
+    assert.isDefined(exitFn);
+    exitFn(component);
+
+    expect(report).toHaveBeenCalledTimes(1);
+    expect(report).toHaveBeenCalledWith(
+      expect.objectContaining({
+        node: callExpression,
+        message: expect.stringContaining("rows"),
+      }),
+    );
+  });
+
+  it("does not report when JSX is pushed into an array but the function doesn't return JSX", () => {
+    const { report, visitor } = createRuleHarness(noInlineComponentsRule, "no-inline-components/test");
+
+    const helper = createFunctionDeclaration("Helper");
+    const helperBody = requireFunctionBody(helper);
+
+    // Create array variable: const rows = []
+    const arrayDeclaration = createVariableDeclaration("const", helperBody);
+    const arrayDeclarator: ESTree.VariableDeclarator = {
+      type: "VariableDeclarator",
+      id: createIdentifier("rows"),
+      init: {
+        type: "ArrayExpression",
+        elements: [],
+        parent: null as unknown as ESTree.Node,
+        ...createSpan(),
+      } as unknown as ESTree.Expression,
+      parent: arrayDeclaration,
+      ...createSpan(),
+    };
+    const arrayInit = arrayDeclarator.init as ESTree.ArrayExpression;
+    arrayInit.parent = arrayDeclarator as unknown as ESTree.Node;
+    arrayDeclarator.id.parent = arrayDeclarator as unknown as ESTree.Node;
+    arrayDeclaration.declarations.push(arrayDeclarator);
+
+    // Create rows.push(<JSXElement />)
+    const jsxArg = createJSXElement("View");
+    const pushCall = {
+      type: "CallExpression" as const,
+      callee: {
+        type: "MemberExpression" as const,
+        object: createIdentifierReference("rows"),
+        property: createIdentifier("push"),
+        computed: false,
+        optional: false,
+        parent: null as unknown as ESTree.Node,
+        ...createSpan(),
+      } as unknown as ESTree.Expression,
+      arguments: [jsxArg as unknown as ESTree.Expression],
+      optional: false,
+      parent: null as unknown as ESTree.Node,
+      ...createSpan(),
+    };
+
+    const callExpression = pushCall as unknown as ESTree.CallExpression;
+    const memberExpr = callExpression.callee as ESTree.MemberExpression;
+    memberExpr.parent = callExpression;
+    memberExpr.object.parent = memberExpr as unknown as ESTree.Node;
+    memberExpr.property.parent = memberExpr as unknown as ESTree.Node;
+    jsxArg.parent = callExpression;
+
+    const pushStatement: ESTree.ExpressionStatement = {
+      type: "ExpressionStatement",
+      expression: callExpression,
+      ...createSpan(),
+      parent: helperBody,
+    };
+    callExpression.parent = pushStatement;
+
+    helperBody.body.push(arrayDeclaration, pushStatement);
+
+    const enterFn = visitor.FunctionDeclaration;
+    assert.isDefined(enterFn);
+    enterFn(helper);
+
+    const variableVisitor = visitor.VariableDeclarator;
+    assert.isDefined(variableVisitor);
+    variableVisitor(arrayDeclarator);
+
+    const callVisitor = visitor.CallExpression;
+    assert.isDefined(callVisitor);
+    callVisitor(callExpression);
+
+    const exitFn = visitor["FunctionDeclaration:exit"];
+    assert.isDefined(exitFn);
+    exitFn(helper);
+
+    expect(report).not.toHaveBeenCalled();
+  });
 });
