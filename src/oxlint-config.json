@@ -44,7 +44,6 @@
 		"no-emoji/no-emoji": "error",
 		"no-component-date-instantiation/no-component-date-instantiation": "warn",
 		"jsx-component-pascal-case/jsx-component-pascal-case": "error",
-		"pretty-props/pretty-props": "error",
 		"react/self-closing-comp": [
 			"deny",
 			{
