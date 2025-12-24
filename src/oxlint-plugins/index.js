@@ -2,6 +2,7 @@ import { definePlugin } from "oxlint";
 
 import { jsxComponentPascalCaseRule } from "./jsx-component-pascal-case.js";
 import { noComponentDateInstantiationRule } from "./no-component-date-instantiation.js";
+import { noDeleteRule } from "./no-delete.js";
 import { noEmojiRule } from "./no-emoji.js";
 import { noFinallyRule } from "./no-finally.js";
 import { noInlineComponentsRule } from "./no-inline-components.js";
@@ -18,6 +19,7 @@ const plugin = definePlugin({
   rules: {
     "jsx-component-pascal-case": jsxComponentPascalCaseRule,
     "no-component-date-instantiation": noComponentDateInstantiationRule,
+    "no-delete": noDeleteRule,
     "no-emoji": noEmojiRule,
     "no-finally": noFinallyRule,
     "no-inline-components": noInlineComponentsRule,
