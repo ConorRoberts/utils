@@ -38,6 +38,7 @@
 		"conorroberts/no-inline-components": "error",
 		"@typescript-eslint/consistent-type-imports": "deny",
 		"conorroberts/no-switch": "error",
+		"conorroberts/no-delete": "error",
 		"conorroberts/no-top-level-let": "error",
 		"conorroberts/no-finally": "error",
 		"conorroberts/no-react-namespace": "error",
