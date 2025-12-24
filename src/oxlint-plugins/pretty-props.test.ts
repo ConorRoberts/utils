@@ -1,7 +1,14 @@
 import type { ESTree } from "oxlint";
 import { assert, describe, expect, it } from "vitest";
 import { prettyPropsRule } from "./pretty-props.js";
-import { createFunctionBody, createIdentifier, createJSXElement, createRuleHarness, createSpan } from "./test-utils";
+import {
+  createFunctionBody,
+  createIdentifier,
+  createJSXElement,
+  createProgram,
+  createRuleHarness,
+  createSpan,
+} from "./test-utils";
 
 const createReturnStatement = (expression: ESTree.Expression): ESTree.ReturnStatement => {
   const ret = {
@@ -108,8 +115,10 @@ describe("pretty-props rule", () => {
   it("reports when props are destructured in function declaration", () => {
     const { report, visitor } = createRuleHarness(prettyPropsRule, "pretty-props/test");
 
+    const program = createProgram();
     const objectPattern = createObjectPattern(["title", "onPress"]);
     const fn = createFunctionDeclaration("MyComponent", [objectPattern]);
+    fn.parent = program;
     const body = fn.body;
     if (!body) {
       throw new Error("Function body is required");
@@ -135,6 +144,7 @@ describe("pretty-props rule", () => {
   it("reports when props are destructured in arrow function", () => {
     const { report, visitor } = createRuleHarness(prettyPropsRule, "pretty-props/test");
 
+    const program = createProgram();
     const objectPattern = createObjectPattern(["title", "onPress"]);
     const arrow = createArrowFunctionExpression([objectPattern], false);
 
@@ -146,7 +156,15 @@ describe("pretty-props rule", () => {
       init: arrow,
       ...createSpan(),
     };
+    const varDeclaration = {
+      type: "VariableDeclaration" as const,
+      kind: "const" as const,
+      declarations: [declarator],
+      parent: program,
+      ...createSpan(),
+    };
     (id as unknown as { parent: unknown }).parent = declarator;
+    (declarator as unknown as { parent: unknown }).parent = varDeclaration;
     arrow.parent = declarator as unknown as ESTree.Node;
 
     const enterFn = visitor.ArrowFunctionExpression;
@@ -165,8 +183,10 @@ describe("pretty-props rule", () => {
   it("reports when props parameter is not named 'props'", () => {
     const { report, visitor } = createRuleHarness(prettyPropsRule, "pretty-props/test");
 
+    const program = createProgram();
     const param = createIdentifier("properties");
     const fn = createFunctionDeclaration("MyComponent", [param]);
+    fn.parent = program;
     const body = fn.body;
     if (!body) {
       throw new Error("Function body is required");
@@ -192,8 +212,10 @@ describe("pretty-props rule", () => {
   it("allows component with props parameter named 'props'", () => {
     const { report, visitor } = createRuleHarness(prettyPropsRule, "pretty-props/test");
 
+    const program = createProgram();
     const param = createIdentifier("props");
     const fn = createFunctionDeclaration("MyComponent", [param]);
+    fn.parent = program;
     const body = fn.body;
     if (!body) {
       throw new Error("Function body is required");
@@ -213,6 +235,7 @@ describe("pretty-props rule", () => {
   it("allows arrow function component with props parameter named 'props'", () => {
     const { report, visitor } = createRuleHarness(prettyPropsRule, "pretty-props/test");
 
+    const program = createProgram();
     const param = createIdentifier("props");
     const arrow = createArrowFunctionExpression([param], true);
     const body = arrow.body as ESTree.FunctionBody;
@@ -228,7 +251,15 @@ describe("pretty-props rule", () => {
       init: arrow,
       ...createSpan(),
     };
+    const varDeclaration = {
+      type: "VariableDeclaration" as const,
+      kind: "const" as const,
+      declarations: [declarator],
+      parent: program,
+      ...createSpan(),
+    };
     (id as unknown as { parent: unknown }).parent = declarator;
+    (declarator as unknown as { parent: unknown }).parent = varDeclaration;
     arrow.parent = declarator as unknown as ESTree.Node;
 
     const enterFn = visitor.ArrowFunctionExpression;
@@ -267,7 +298,9 @@ describe("pretty-props rule", () => {
   it("allows component with no parameters", () => {
     const { report, visitor } = createRuleHarness(prettyPropsRule, "pretty-props/test");
 
+    const program = createProgram();
     const fn = createFunctionDeclaration("MyComponent", []);
+    fn.parent = program;
     const body = fn.body;
     if (!body) {
       throw new Error("Function body is required");
@@ -287,6 +320,7 @@ describe("pretty-props rule", () => {
   it("reports when arrow function component with expression body has destructured props", () => {
     const { report, visitor } = createRuleHarness(prettyPropsRule, "pretty-props/test");
 
+    const program = createProgram();
     const objectPattern = createObjectPattern(["title"]);
     const arrow = createArrowFunctionExpression([objectPattern], false);
 
@@ -298,7 +332,15 @@ describe("pretty-props rule", () => {
       init: arrow,
       ...createSpan(),
     };
+    const varDeclaration = {
+      type: "VariableDeclaration" as const,
+      kind: "const" as const,
+      declarations: [declarator],
+      parent: program,
+      ...createSpan(),
+    };
     (id as unknown as { parent: unknown }).parent = declarator;
+    (declarator as unknown as { parent: unknown }).parent = varDeclaration;
     arrow.parent = declarator as unknown as ESTree.Node;
 
     const enterFn = visitor.ArrowFunctionExpression;
@@ -317,6 +359,7 @@ describe("pretty-props rule", () => {
   it("allows arrow function component with expression body and props parameter", () => {
     const { report, visitor } = createRuleHarness(prettyPropsRule, "pretty-props/test");
 
+    const program = createProgram();
     const param = createIdentifier("props");
     const arrow = createArrowFunctionExpression([param], false);
 
@@ -328,7 +371,15 @@ describe("pretty-props rule", () => {
       init: arrow,
       ...createSpan(),
     };
+    const varDeclaration = {
+      type: "VariableDeclaration" as const,
+      kind: "const" as const,
+      declarations: [declarator],
+      parent: program,
+      ...createSpan(),
+    };
     (id as unknown as { parent: unknown }).parent = declarator;
+    (declarator as unknown as { parent: unknown }).parent = varDeclaration;
     arrow.parent = declarator as unknown as ESTree.Node;
 
     const enterFn = visitor.ArrowFunctionExpression;
@@ -341,6 +392,7 @@ describe("pretty-props rule", () => {
   it("reports when function expression component has destructured props", () => {
     const { report, visitor } = createRuleHarness(prettyPropsRule, "pretty-props/test");
 
+    const program = createProgram();
     const objectPattern = createObjectPattern(["title"]);
     const fnExpr = {
       type: "FunctionExpression" as const,
@@ -373,7 +425,15 @@ describe("pretty-props rule", () => {
       init: functionNode,
       ...createSpan(),
     };
+    const varDeclaration = {
+      type: "VariableDeclaration" as const,
+      kind: "const" as const,
+      declarations: [declarator],
+      parent: program,
+      ...createSpan(),
+    };
     (id as unknown as { parent: unknown }).parent = declarator;
+    (declarator as unknown as { parent: unknown }).parent = varDeclaration;
     functionNode.parent = declarator as unknown as ESTree.Node;
 
     const enterFn = visitor.FunctionExpression;
@@ -406,8 +466,10 @@ describe("pretty-props rule", () => {
   it("allows camelCase function that returns JSX", () => {
     const { report, visitor } = createRuleHarness(prettyPropsRule, "pretty-props/test");
 
+    const program = createProgram();
     const param = createIdentifier("data");
     const fn = createFunctionDeclaration("myRenderer", [param]);
+    fn.parent = program;
     const body = fn.body;
     if (!body) {
       throw new Error("Function body is required");
@@ -420,6 +482,54 @@ describe("pretty-props rule", () => {
     const enterFn = visitor.FunctionDeclaration;
     assert.isDefined(enterFn);
     enterFn(fn);
+
+    expect(report).not.toHaveBeenCalled();
+  });
+
+  it("allows arrow functions passed as arguments to array methods like .map()", () => {
+    const { report, visitor } = createRuleHarness(prettyPropsRule, "pretty-props/test");
+
+    // Simulates: todos.map((todo) => <Card key={todo.id} />)
+    const param = createIdentifier("todo");
+    const arrow = createArrowFunctionExpression([param], false);
+
+    // Create a CallExpression parent to simulate: todos.map(...)
+    const callExpression = {
+      type: "CallExpression" as const,
+      callee: createIdentifier("map"),
+      arguments: [arrow],
+      optional: false,
+      ...createSpan(),
+    };
+    arrow.parent = callExpression as unknown as ESTree.Node;
+
+    const enterFn = visitor.ArrowFunctionExpression;
+    assert.isDefined(enterFn);
+    enterFn(arrow);
+
+    expect(report).not.toHaveBeenCalled();
+  });
+
+  it("allows arrow functions with any parameter name when passed to callbacks", () => {
+    const { report, visitor } = createRuleHarness(prettyPropsRule, "pretty-props/test");
+
+    // Simulates: items.filter((item) => <View />)
+    const param = createIdentifier("item");
+    const arrow = createArrowFunctionExpression([param], false);
+
+    // Create a CallExpression parent to simulate: items.filter(...)
+    const callExpression = {
+      type: "CallExpression" as const,
+      callee: createIdentifier("filter"),
+      arguments: [arrow],
+      optional: false,
+      ...createSpan(),
+    };
+    arrow.parent = callExpression as unknown as ESTree.Node;
+
+    const enterFn = visitor.ArrowFunctionExpression;
+    assert.isDefined(enterFn);
+    enterFn(arrow);
 
     expect(report).not.toHaveBeenCalled();
   });

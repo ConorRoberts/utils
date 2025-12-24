@@ -108,6 +108,21 @@ export const createVariableDeclaration = (
   ...createSpan(),
 });
 
+export const createProgram = () => {
+  const program = {
+    type: "Program" as const,
+    sourceType: "module" as const,
+    body: [],
+    hashbang: null,
+    comments: [],
+    tokens: [],
+    parent: undefined,
+    ...createSpan(),
+  };
+
+  return program as unknown as ESTree.Program;
+};
+
 type RuleVisitor = ReturnType<CreateRule["create"]> | ReturnType<CreateOnceRule["createOnce"]>;
 type RuleContext = Pick<Context, "id" | "options" | "report">;
 

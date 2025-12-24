@@ -128,11 +128,55 @@ const rule = defineRule({
 
   createOnce(context) {
     /**
-     * Check if a function is a React component (PascalCase naming)
+     * Check if a node is at the top level of the file (module scope)
      * @param {FunctionLikeNode} node
      * @returns {boolean}
      */
-    const isReactComponent = (node) => {
+    const isTopLevel = (node) => {
+      let current = node.parent;
+
+      while (current && isNode(current)) {
+        // If we hit a Program node, we're at the top level
+        if (current.type === "Program") {
+          return true;
+        }
+
+        // FunctionDeclarations at the Program level will have Program as parent
+        if (node.type === "FunctionDeclaration" && current.type === "Program") {
+          return true;
+        }
+
+        // For variable declarations: const MyComponent = () => {}
+        // The hierarchy is: ArrowFunction -> VariableDeclarator -> VariableDeclaration -> Program
+        if (current.type === "VariableDeclaration") {
+          const parent = current.parent;
+          if (parent && isNode(parent) && parent.type === "Program") {
+            return true;
+          }
+        }
+
+        // If we encounter a function, we're inside a nested function
+        if (FUNCTION_NODE_TYPES.has(current.type)) {
+          return false;
+        }
+
+        current = current.parent;
+      }
+
+      return false;
+    };
+
+    /**
+     * Check if a function is a top-level React component (PascalCase naming at top level)
+     * @param {FunctionLikeNode} node
+     * @returns {boolean}
+     */
+    const isTopLevelReactComponent = (node) => {
+      // First check if it's at the top level
+      if (!isTopLevel(node)) {
+        return false;
+      }
+
       // Check for named functions (FunctionDeclaration, FunctionExpression with id)
       if (node.id?.name) {
         const firstChar = node.id.name.charAt(0);
@@ -155,16 +199,6 @@ const rule = defineRule({
         }
       }
 
-      // Check for property assignments: const obj = { MyComponent: () => {} }
-      if (parent.type === "Property" && parent.key && "name" in parent.key) {
-        const name = parent.key.name;
-        if (typeof name === "string") {
-          const firstChar = name.charAt(0);
-          return firstChar === firstChar.toUpperCase();
-        }
-      }
-
-      // For all other cases (render props, callbacks, etc.), assume it's not a component
       return false;
     };
 
@@ -177,8 +211,8 @@ const rule = defineRule({
         return;
       }
 
-      // Only check functions that are React components (PascalCase naming)
-      if (!isReactComponent(node)) {
+      // Only check functions that are top-level React components (PascalCase naming at top level)
+      if (!isTopLevelReactComponent(node)) {
         return;
       }
 
