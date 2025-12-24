@@ -30,50 +30,6 @@
     "./oxlint": {
       "types": "./dist/oxlint/index.d.mts",
       "default": "./dist/oxlint/index.mjs"
-    },
-    "./oxlint/jsx-component-pascal-case": {
-      "types": "./dist/oxlint/jsx-component-pascal-case.d.mts",
-      "default": "./dist/oxlint/jsx-component-pascal-case.mjs"
-    },
-    "./oxlint/no-component-date-instantiation": {
-      "types": "./dist/oxlint/no-component-date-instantiation.d.mts",
-      "default": "./dist/oxlint/no-component-date-instantiation.mjs"
-    },
-    "./oxlint/no-emoji": {
-      "types": "./dist/oxlint/no-emoji.d.mts",
-      "default": "./dist/oxlint/no-emoji.mjs"
-    },
-    "./oxlint/no-finally": {
-      "types": "./dist/oxlint/no-finally.d.mts",
-      "default": "./dist/oxlint/no-finally.mjs"
-    },
-    "./oxlint/no-function-call-in-jsx": {
-      "types": "./dist/oxlint/no-function-call-in-jsx.d.mts",
-      "default": "./dist/oxlint/no-function-call-in-jsx.mjs"
-    },
-    "./oxlint/no-inline-components": {
-      "types": "./dist/oxlint/no-inline-components.d.mts",
-      "default": "./dist/oxlint/no-inline-components.mjs"
-    },
-    "./oxlint/no-react-namespace": {
-      "types": "./dist/oxlint/no-react-namespace.d.mts",
-      "default": "./dist/oxlint/no-react-namespace.mjs"
-    },
-    "./oxlint/no-switch-plugin": {
-      "types": "./dist/oxlint/no-switch-plugin.d.mts",
-      "default": "./dist/oxlint/no-switch-plugin.mjs"
-    },
-    "./oxlint/no-top-level-let": {
-      "types": "./dist/oxlint/no-top-level-let.d.mts",
-      "default": "./dist/oxlint/no-top-level-let.mjs"
-    },
-    "./oxlint/no-type-cast": {
-      "types": "./dist/oxlint/no-type-cast.d.mts",
-      "default": "./dist/oxlint/no-type-cast.mjs"
-    },
-    "./oxlint/pretty-props": {
-      "types": "./dist/oxlint/pretty-props.d.mts",
-      "default": "./dist/oxlint/pretty-props.mjs"
     }
   },
   "dependencies": {

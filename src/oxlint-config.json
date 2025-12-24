@@ -45,7 +45,6 @@
 		"conorroberts/no-component-date-instantiation": "warn",
 		"conorroberts/jsx-component-pascal-case": "error",
 		"conorroberts/pretty-props": "error",
-		"conorroberts/no-function-call-in-jsx": "error",
 		"react/self-closing-comp": [
 			"deny",
 			{
