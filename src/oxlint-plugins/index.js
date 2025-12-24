@@ -4,7 +4,6 @@ import { jsxComponentPascalCaseRule } from "./jsx-component-pascal-case.js";
 import { noComponentDateInstantiationRule } from "./no-component-date-instantiation.js";
 import { noEmojiRule } from "./no-emoji.js";
 import { noFinallyRule } from "./no-finally.js";
-import { noFunctionCallInJsxRule } from "./no-function-call-in-jsx.js";
 import { noInlineComponentsRule } from "./no-inline-components.js";
 import { noReactNamespaceRule } from "./no-react-namespace.js";
 import { noSwitchRule } from "./no-switch-plugin.js";
@@ -21,7 +20,6 @@ const plugin = definePlugin({
     "no-component-date-instantiation": noComponentDateInstantiationRule,
     "no-emoji": noEmojiRule,
     "no-finally": noFinallyRule,
-    "no-function-call-in-jsx": noFunctionCallInJsxRule,
     "no-inline-components": noInlineComponentsRule,
     "no-react-namespace": noReactNamespaceRule,
     "no-switch": noSwitchRule,
