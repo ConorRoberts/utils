@@ -20,6 +20,7 @@ export default defineConfig({
     "oxlint/no-switch-plugin": "src/oxlint-plugins/no-switch-plugin.js",
     "oxlint/no-top-level-let": "src/oxlint-plugins/no-top-level-let.js",
     "oxlint/no-type-cast": "src/oxlint-plugins/no-type-cast.js",
+    "oxlint/pretty-props": "src/oxlint-plugins/pretty-props.js",
   },
   onSuccess: async () => {
     const targetDir = "dist/oxlint";
