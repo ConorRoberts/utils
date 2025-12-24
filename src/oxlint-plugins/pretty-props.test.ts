@@ -138,6 +138,17 @@ describe("pretty-props rule", () => {
     const objectPattern = createObjectPattern(["title", "onPress"]);
     const arrow = createArrowFunctionExpression([objectPattern], false);
 
+    // Create a variable declarator parent to simulate: const MyComponent = ({ title }) => <View />
+    const id = createIdentifier("MyComponent");
+    const declarator = {
+      type: "VariableDeclarator" as const,
+      id,
+      init: arrow,
+      ...createSpan(),
+    };
+    (id as unknown as { parent: unknown }).parent = declarator;
+    arrow.parent = declarator as unknown as ESTree.Node;
+
     const enterFn = visitor.ArrowFunctionExpression;
     assert.isDefined(enterFn);
     enterFn(arrow);
@@ -209,6 +220,17 @@ describe("pretty-props rule", () => {
     returnStatement.parent = body;
     body.body.push(returnStatement);
 
+    // Create a variable declarator parent to simulate: const MyComponent = (props) => { return <View /> }
+    const id = createIdentifier("MyComponent");
+    const declarator = {
+      type: "VariableDeclarator" as const,
+      id,
+      init: arrow,
+      ...createSpan(),
+    };
+    (id as unknown as { parent: unknown }).parent = declarator;
+    arrow.parent = declarator as unknown as ESTree.Node;
+
     const enterFn = visitor.ArrowFunctionExpression;
     assert.isDefined(enterFn);
     enterFn(arrow);
@@ -268,6 +290,17 @@ describe("pretty-props rule", () => {
     const objectPattern = createObjectPattern(["title"]);
     const arrow = createArrowFunctionExpression([objectPattern], false);
 
+    // Create a variable declarator parent to simulate: const MyComponent = ({ title }) => <View />
+    const id = createIdentifier("MyComponent");
+    const declarator = {
+      type: "VariableDeclarator" as const,
+      id,
+      init: arrow,
+      ...createSpan(),
+    };
+    (id as unknown as { parent: unknown }).parent = declarator;
+    arrow.parent = declarator as unknown as ESTree.Node;
+
     const enterFn = visitor.ArrowFunctionExpression;
     assert.isDefined(enterFn);
     enterFn(arrow);
@@ -286,6 +319,17 @@ describe("pretty-props rule", () => {
 
     const param = createIdentifier("props");
     const arrow = createArrowFunctionExpression([param], false);
+
+    // Create a variable declarator parent to simulate: const MyComponent = (props) => <View />
+    const id = createIdentifier("MyComponent");
+    const declarator = {
+      type: "VariableDeclarator" as const,
+      id,
+      init: arrow,
+      ...createSpan(),
+    };
+    (id as unknown as { parent: unknown }).parent = declarator;
+    arrow.parent = declarator as unknown as ESTree.Node;
 
     const enterFn = visitor.ArrowFunctionExpression;
     assert.isDefined(enterFn);
@@ -321,6 +365,17 @@ describe("pretty-props rule", () => {
     returnStatement.parent = body;
     body.body.push(returnStatement);
 
+    // Create a variable declarator parent to simulate: const MyComponent = function({ title }) { return <View /> }
+    const id = createIdentifier("MyComponent");
+    const declarator = {
+      type: "VariableDeclarator" as const,
+      id,
+      init: functionNode,
+      ...createSpan(),
+    };
+    (id as unknown as { parent: unknown }).parent = declarator;
+    functionNode.parent = declarator as unknown as ESTree.Node;
+
     const enterFn = visitor.FunctionExpression;
     assert.isDefined(enterFn);
     enterFn(functionNode);
@@ -332,5 +387,40 @@ describe("pretty-props rule", () => {
         message: expect.stringContaining("should not be destructured"),
       }),
     );
+  });
+
+  it("allows render prop functions with destructured parameters (non-PascalCase)", () => {
+    const { report, visitor } = createRuleHarness(prettyPropsRule, "pretty-props/test");
+
+    // Simulates: ({ pressed }) => <View />
+    const objectPattern = createObjectPattern(["pressed"]);
+    const arrow = createArrowFunctionExpression([objectPattern], false);
+
+    const enterFn = visitor.ArrowFunctionExpression;
+    assert.isDefined(enterFn);
+    enterFn(arrow);
+
+    expect(report).not.toHaveBeenCalled();
+  });
+
+  it("allows camelCase function that returns JSX", () => {
+    const { report, visitor } = createRuleHarness(prettyPropsRule, "pretty-props/test");
+
+    const param = createIdentifier("data");
+    const fn = createFunctionDeclaration("myRenderer", [param]);
+    const body = fn.body;
+    if (!body) {
+      throw new Error("Function body is required");
+    }
+
+    const returnStatement = createReturnStatement(createJSXElement());
+    returnStatement.parent = body;
+    body.body.push(returnStatement);
+
+    const enterFn = visitor.FunctionDeclaration;
+    assert.isDefined(enterFn);
+    enterFn(fn);
+
+    expect(report).not.toHaveBeenCalled();
   });
 });

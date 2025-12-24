@@ -128,11 +128,57 @@ const rule = defineRule({
 
   createOnce(context) {
     /**
+     * Check if a function is a React component (PascalCase naming)
+     * @param {FunctionLikeNode} node
+     * @returns {boolean}
+     */
+    const isReactComponent = (node) => {
+      // Check for named functions (FunctionDeclaration, FunctionExpression with id)
+      if (node.id?.name) {
+        const firstChar = node.id.name.charAt(0);
+        return firstChar === firstChar.toUpperCase();
+      }
+
+      // For arrow functions and anonymous function expressions, check the parent context
+      // to see if they're assigned to a PascalCase variable
+      const parent = node.parent;
+      if (!parent || !isNode(parent)) {
+        return false;
+      }
+
+      // Check for variable declarations: const MyComponent = () => {}
+      if (parent.type === "VariableDeclarator" && parent.id && "name" in parent.id) {
+        const name = parent.id.name;
+        if (typeof name === "string") {
+          const firstChar = name.charAt(0);
+          return firstChar === firstChar.toUpperCase();
+        }
+      }
+
+      // Check for property assignments: const obj = { MyComponent: () => {} }
+      if (parent.type === "Property" && parent.key && "name" in parent.key) {
+        const name = parent.key.name;
+        if (typeof name === "string") {
+          const firstChar = name.charAt(0);
+          return firstChar === firstChar.toUpperCase();
+        }
+      }
+
+      // For all other cases (render props, callbacks, etc.), assume it's not a component
+      return false;
+    };
+
+    /**
      * @param {FunctionLikeNode} node
      */
     const checkFunction = (node) => {
       // Only check functions that return JSX (React components)
       if (!functionReturnsJsx(node)) {
+        return;
+      }
+
+      // Only check functions that are React components (PascalCase naming)
+      if (!isReactComponent(node)) {
         return;
       }
 
@@ -182,4 +228,3 @@ const rule = defineRule({
 });
 
 export const prettyPropsRule = rule;
-
