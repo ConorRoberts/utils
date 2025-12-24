@@ -47,6 +47,7 @@
 		"conorroberts/no-component-date-instantiation": "warn",
 		"conorroberts/jsx-component-pascal-case": "error",
 		"conorroberts/pretty-props": "error",
+		"conorroberts/no-array-type": "error",
 		"react/self-closing-comp": [
 			"deny",
 			{
