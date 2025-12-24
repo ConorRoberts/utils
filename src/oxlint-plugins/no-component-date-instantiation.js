@@ -198,7 +198,3 @@ const rule = defineRule({
 
 export const noComponentDateInstantiationRule = rule;
 
-export default {
-  meta: { name: "conorroberts/no-component-date-instantiation" },
-  rules: { "conorroberts/no-component-date-instantiation": rule },
-};

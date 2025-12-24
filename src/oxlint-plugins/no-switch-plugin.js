@@ -2,7 +2,7 @@ import { defineRule } from "oxlint";
 
 /** @typedef {import("oxlint").ESTree.Node} ESTNode */
 
-const noSwitchRule = defineRule({
+export const noSwitchRule = defineRule({
   meta: {
     type: "problem",
     docs: {
@@ -27,12 +27,3 @@ const noSwitchRule = defineRule({
     });
   },
 });
-
-export default {
-  meta: {
-    name: "conorroberts/no-switch-plugin",
-  },
-  rules: {
-    "conorroberts/no-switch": noSwitchRule,
-  },
-};

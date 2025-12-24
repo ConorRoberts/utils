@@ -215,7 +215,3 @@ const rule = defineRule({
 
 export const jsxComponentPascalCaseRule = rule;
 
-export default {
-  meta: { name: "conorroberts/jsx-component-pascal-case" },
-  rules: { "conorroberts/jsx-component-pascal-case": rule },
-};

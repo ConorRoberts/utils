@@ -107,7 +107,3 @@ const rule = defineRule({
 
 export const noEmojiRule = rule;
 
-export default {
-  meta: { name: "conorroberts/no-emoji" },
-  rules: { "conorroberts/no-emoji": rule },
-};

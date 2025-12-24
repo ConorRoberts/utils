@@ -536,7 +536,3 @@ const rule = defineRule({
 
 export const noInlineComponentsRule = rule;
 
-export default {
-  meta: { name: "conorroberts/no-inline-components" },
-  rules: { "conorroberts/no-inline-components": rule },
-};
