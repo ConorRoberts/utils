@@ -92,22 +92,6 @@ const isDateInstantiation = (node) => {
   return false;
 };
 
-/**
- * Find the enclosing function for a node
- * @param {ESTNode | null | undefined} node
- * @returns {FunctionLikeNode | null}
- */
-const getEnclosingFunction = (node) => {
-  const findFunction = (current) => {
-    if (!current) return null;
-    if (isFunctionLike(current)) {
-      return current;
-    }
-    return findFunction(isNode(current) ? (current.parent ?? null) : null);
-  };
-  return findFunction(isNode(node) ? (node.parent ?? null) : null);
-};
-
 const rule = defineRule({
   meta: {
     type: "problem",
@@ -215,6 +199,6 @@ const rule = defineRule({
 export const noComponentDateInstantiationRule = rule;
 
 export default {
-  meta: { name: "no-component-date-instantiation" },
-  rules: { "no-component-date-instantiation": rule },
+  meta: { name: "conorroberts/no-component-date-instantiation" },
+  rules: { "conorroberts/no-component-date-instantiation": rule },
 };

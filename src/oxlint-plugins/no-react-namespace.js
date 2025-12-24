@@ -102,6 +102,6 @@ const rule = defineRule({
 export const noReactNamespaceRule = rule;
 
 export default {
-  meta: { name: "no-react-namespace" },
-  rules: { "no-react-namespace": rule },
+  meta: { name: "conorroberts/no-react-namespace" },
+  rules: { "conorroberts/no-react-namespace": rule },
 };

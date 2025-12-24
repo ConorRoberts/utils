@@ -69,6 +69,6 @@ const rule = defineRule({
 export const noTypeCastRule = rule;
 
 export default {
-  meta: { name: "no-type-cast" },
-  rules: { "no-type-cast": rule },
+  meta: { name: "conorroberts/no-type-cast" },
+  rules: { "conorroberts/no-type-cast": rule },
 };

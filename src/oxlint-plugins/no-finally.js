@@ -33,6 +33,6 @@ const rule = defineRule({
 export const noFinallyRule = rule;
 
 export default {
-  meta: { name: "no-finally" },
-  rules: { "no-finally": rule },
+  meta: { name: "conorroberts/no-finally" },
+  rules: { "conorroberts/no-finally": rule },
 };

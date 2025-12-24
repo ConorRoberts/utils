@@ -184,6 +184,6 @@ const rule = defineRule({
 export const prettyPropsRule = rule;
 
 export default {
-  meta: { name: "pretty-props" },
-  rules: { "pretty-props": rule },
+  meta: { name: "conorroberts/pretty-props" },
+  rules: { "conorroberts/pretty-props": rule },
 };

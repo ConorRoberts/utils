@@ -34,16 +34,18 @@
 		"typescript/no-floating-promises": "off",
 		"no-unused-vars": "warn",
 		"typescript/no-import-type-side-effects": "deny",
-		"no-inline-components/no-inline-components": "error",
+		"conorroberts/no-inline-components": "error",
 		"@typescript-eslint/consistent-type-imports": "deny",
-		"no-switch-plugin/no-switch": "error",
-		"no-top-level-let/no-top-level-let": "error",
-		"no-finally/no-finally": "error",
-		"no-react-namespace/no-react-namespace": "error",
-		"no-type-cast/no-type-cast": "warn",
-		"no-emoji/no-emoji": "error",
-		"no-component-date-instantiation/no-component-date-instantiation": "warn",
-		"jsx-component-pascal-case/jsx-component-pascal-case": "error",
+		"conorroberts/no-switch": "error",
+		"conorroberts/no-top-level-let": "error",
+		"conorroberts/no-finally": "error",
+		"conorroberts/no-react-namespace": "error",
+		"conorroberts/no-type-cast": "warn",
+		"conorroberts/no-emoji": "error",
+		"conorroberts/no-component-date-instantiation": "warn",
+		"conorroberts/jsx-component-pascal-case": "error",
+		"conorroberts/pretty-props": "error",
+		"conorroberts/no-function-call-in-jsx": "error",
 		"react/self-closing-comp": [
 			"deny",
 			{
@@ -62,7 +64,7 @@
 			],
 			"rules": {
 				"@typescript-eslint/no-explicit-any": "off",
-				"no-type-cast/no-type-cast": "off"
+				"conorroberts/no-type-cast": "off"
 			}
 		}
 	]

@@ -30,9 +30,9 @@ const noSwitchRule = defineRule({
 
 export default {
   meta: {
-    name: "no-switch-plugin",
+    name: "conorroberts/no-switch-plugin",
   },
   rules: {
-    "no-switch": noSwitchRule,
+    "conorroberts/no-switch": noSwitchRule,
   },
 };

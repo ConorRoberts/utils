@@ -95,6 +95,6 @@ const rule = defineRule({
 export const noTopLevelLetRule = rule;
 
 export default {
-  meta: { name: "no-top-level-let" },
-  rules: { "no-top-level-let": rule },
+  meta: { name: "conorroberts/no-top-level-let" },
+  rules: { "conorroberts/no-top-level-let": rule },
 };

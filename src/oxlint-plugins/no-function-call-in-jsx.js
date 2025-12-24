@@ -86,6 +86,6 @@ const rule = defineRule({
 export const noFunctionCallInJsxRule = rule;
 
 export default {
-  meta: { name: "no-function-call-in-jsx" },
-  rules: { "no-function-call-in-jsx": rule },
+  meta: { name: "conorroberts/no-function-call-in-jsx" },
+  rules: { "conorroberts/no-function-call-in-jsx": rule },
 };
