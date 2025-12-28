@@ -33,8 +33,7 @@ export const createEnv = <
   }
 
   if (invalidKeys.length > 0) {
-    console.error(`Invalid environment variable(s): ${invalidKeys.map((e) => `"${e}"`).join(", ")}`);
-    process.exit(1);
+    throw new Error(`Invalid environment variable(s): ${invalidKeys.map((e) => `"${e}"`).join(", ")}`);
   }
 
   type ClientEnvKeys = Exclude<
