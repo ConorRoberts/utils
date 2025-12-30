@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useStableCallback } from "./useStableCallback";
 
 /**
@@ -16,8 +16,12 @@ import { useStableCallback } from "./useStableCallback";
  */
 export const useOnMount = (callback: () => void): void => {
   const stableCallback = useStableCallback(callback);
+  const isRun = useRef(false);
 
   useEffect(() => {
-    stableCallback();
+    if (!isRun.current) {
+      isRun.current = true;
+      stableCallback();
+    }
   }, [stableCallback]);
 };
