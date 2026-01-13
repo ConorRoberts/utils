@@ -51,7 +51,6 @@
 		"conorroberts/no-array-type": "error",
 		"conorroberts/no-iife": "error",
 		"promise/prefer-await-to-then": "error",
-		"typescript/no-confusing-void-expression": "error",
 		"react/self-closing-comp": [
 			"deny",
 			{
