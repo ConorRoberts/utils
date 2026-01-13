@@ -50,12 +50,7 @@
 		"conorroberts/pretty-props": "error",
 		"conorroberts/no-array-type": "error",
 		"conorroberts/no-iife": "error",
-		"promise/prefer-await-to-then": [
-			"error",
-			{
-				"strict": true
-			}
-		],
+		"conorroberts/no-promise-then": "error",
 		"react/self-closing-comp": [
 			"deny",
 			{

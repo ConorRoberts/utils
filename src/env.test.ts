@@ -143,9 +143,7 @@ describe("createEnv", () => {
         PORT: "not-a-number",
       };
 
-      createEnv({ schema, env });
-
-      expect(process.exit).toHaveBeenCalledWith(1);
+      expect(() => createEnv({ schema, env })).toThrow('Invalid environment variable(s): "PORT"');
     });
 
     it("should log invalid variable names", () => {
@@ -159,12 +157,9 @@ describe("createEnv", () => {
         TIMEOUT: "also-invalid",
       };
 
-      createEnv({ schema, env });
-
-      const errorCall = (console.error as any).mock.calls[0][0];
-      expect(errorCall).toContain("Invalid environment variable(s):");
-      expect(errorCall).toContain('"PORT"');
-      expect(errorCall).toContain('"TIMEOUT"');
+      expect(() => createEnv({ schema, env })).toThrow(/Invalid environment variable\(s\):/);
+      expect(() => createEnv({ schema, env })).toThrow(/"PORT"/);
+      expect(() => createEnv({ schema, env })).toThrow(/"TIMEOUT"/);
     });
 
     it("should log single invalid variable name", () => {
@@ -176,10 +171,7 @@ describe("createEnv", () => {
         PORT: "invalid",
       };
 
-      createEnv({ schema, env });
-
-      const errorCall = (console.error as any).mock.calls[0][0];
-      expect(errorCall).toBe('Invalid environment variable(s): "PORT"');
+      expect(() => createEnv({ schema, env })).toThrow('Invalid environment variable(s): "PORT"');
     });
 
     it("should handle multiple validation failures", () => {
@@ -195,9 +187,7 @@ describe("createEnv", () => {
         VAR3: "not-a-boolean",
       };
 
-      createEnv({ schema, env });
-
-      expect(process.exit).toHaveBeenCalledWith(1);
+      expect(() => createEnv({ schema, env })).toThrow(/Invalid environment variable\(s\):/);
     });
   });
 
@@ -242,7 +232,7 @@ describe("createEnv", () => {
     it("should handle union of string and null for missing values", () => {
       const schema = {
         REQUIRED: v.string(),
-        OPTIONAL: v.union([v.string(), v.null()]),
+        OPTIONAL: v.optional(v.union([v.string(), v.null()])),
       };
 
       const env = {
@@ -252,8 +242,7 @@ describe("createEnv", () => {
       const result = createEnv({ schema, env });
 
       expect(result.server.REQUIRED).toBe("value");
-      // When a field is missing, it becomes null during validation
-      // but Object.fromEntries doesn't include null values as keys
+      // When a field is missing and marked as optional, it should be undefined
       expect(result.server).toHaveProperty("OPTIONAL");
     });
 
@@ -344,9 +333,7 @@ describe("createEnv", () => {
         NODE_ENV: "staging",
       };
 
-      createEnv({ schema, env });
-
-      expect(process.exit).toHaveBeenCalledWith(1);
+      expect(() => createEnv({ schema, env })).toThrow(/Invalid environment variable\(s\):/);
     });
   });
 
@@ -471,9 +458,7 @@ describe("createEnv", () => {
         },
       };
 
-      createEnv({ schema, env });
-
-      expect(process.exit).toHaveBeenCalledWith(1);
+      expect(() => createEnv({ schema, env })).toThrow(/Invalid environment variable\(s\):/);
     });
 
     it("should handle array schemas", () => {

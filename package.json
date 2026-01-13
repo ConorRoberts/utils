@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsdown --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && tsdown",
     "build:clean": "tsc --noEmit && tsdown --clean"
   },
@@ -50,6 +52,7 @@
     "@testing-library/react": "16.3.0",
     "@types/node": "25.0.1",
     "@types/react": "19.2.7",
+    "jsdom": "27.4.0",
     "react": "19.2.3",
     "tsdown": "0.18.2",
     "typescript": "5.9.3",
