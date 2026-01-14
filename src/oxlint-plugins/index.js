@@ -9,6 +9,7 @@ import { noEmojiRule } from "./no-emoji.js";
 import { noFinallyRule } from "./no-finally.js";
 import { noIifeRule } from "./no-iife.js";
 import { noInlineComponentsRule } from "./no-inline-components.js";
+import { noNestedPureFunctionsRule } from "./no-nested-pure-functions.js";
 import { noPromiseThenRule } from "./no-promise-then.js";
 import { noReactNamespaceRule } from "./no-react-namespace.js";
 import { noSwitchRule } from "./no-switch-plugin.js";
@@ -30,6 +31,7 @@ const plugin = definePlugin({
     "no-finally": noFinallyRule,
     "no-iife": noIifeRule,
     "no-inline-components": noInlineComponentsRule,
+    "no-nested-pure-functions": noNestedPureFunctionsRule,
     "no-promise-then": noPromiseThenRule,
     "no-react-namespace": noReactNamespaceRule,
     "no-switch": noSwitchRule,
