@@ -60,7 +60,7 @@ const createIfStatement = (parent: ESTree.Node, consequent: ESTree.Statement): E
 };
 
 describe("no-top-level-let rule", () => {
-  it("reports top-level let in any function", () => {
+  it("reports let in any function", () => {
     const { report, visitor } = createRuleHarness(noTopLevelLetRule, "no-top-level-let/test");
     const fn = createFunction("SummaryCard");
     const block = createFunctionBody(fn);
@@ -79,7 +79,7 @@ describe("no-top-level-let rule", () => {
     );
   });
 
-  it("reports top-level let in lowercase functions", () => {
+  it("reports let in lowercase functions", () => {
     const { report, visitor } = createRuleHarness(noTopLevelLetRule, "no-top-level-let/test");
     const fn = createFunction("helper");
     const block = createFunctionBody(fn);
@@ -107,7 +107,7 @@ describe("no-top-level-let rule", () => {
     expect(report).not.toHaveBeenCalled();
   });
 
-  it("ignores let declarations inside nested blocks", () => {
+  it("reports let declarations inside nested blocks", () => {
     const { report, visitor } = createRuleHarness(noTopLevelLetRule, "no-top-level-let/test");
     const fn = createFunction("SummaryCard");
     const block = createFunctionBody(fn);
@@ -122,10 +122,10 @@ describe("no-top-level-let rule", () => {
 
     visitor.VariableDeclaration(variable);
 
-    expect(report).not.toHaveBeenCalled();
+    expect(report).toHaveBeenCalledTimes(1);
   });
 
-  it("ignores let declarations inside loops", () => {
+  it("reports let declarations inside loop bodies", () => {
     const { report, visitor } = createRuleHarness(noTopLevelLetRule, "no-top-level-let/test");
     const fn = createFunction("processItems");
     const block = createFunctionBody(fn);
@@ -151,10 +151,118 @@ describe("no-top-level-let rule", () => {
 
     visitor.VariableDeclaration(variable);
 
+    expect(report).toHaveBeenCalledTimes(1);
+  });
+
+  it("allows let in for loop initializers", () => {
+    const { report, visitor } = createRuleHarness(noTopLevelLetRule, "no-top-level-let/test");
+    const fn = createFunction("processItems");
+    const block = createFunctionBody(fn);
+    fn.body = block;
+
+    // Create a for loop inside the function
+    const forLoop: ESTree.ForStatement = {
+      type: "ForStatement",
+      init: null,
+      test: null,
+      update: null,
+      body: createBlockStatement(undefined),
+      parent: block,
+      ...createSpan(),
+    };
+    const loopBody = forLoop.body as ESTree.BlockStatement;
+    loopBody.parent = forLoop;
+    block.body.push(forLoop);
+
+    // Create a let declaration as the for loop initializer
+    const variable = createVariableDeclaration("let", forLoop);
+    forLoop.init = variable;
+
+    assert.isDefined(visitor.VariableDeclaration);
+
+    visitor.VariableDeclaration(variable);
+
     expect(report).not.toHaveBeenCalled();
   });
 
-  it("reports top-level let in any function regardless of naming", () => {
+  it("allows let in for-of loop initializers", () => {
+    const { report, visitor } = createRuleHarness(noTopLevelLetRule, "no-top-level-let/test");
+    const fn = createFunction("processItems");
+    const block = createFunctionBody(fn);
+    fn.body = block;
+
+    const forOfLoop: ESTree.ForOfStatement = {
+      type: "ForOfStatement",
+      await: false,
+      left: null,
+      right: createIdentifier("items"),
+      body: createBlockStatement(undefined),
+      parent: block,
+      ...createSpan(),
+    } as unknown as ESTree.ForOfStatement;
+
+    const loopBody = forOfLoop.body as ESTree.BlockStatement;
+    loopBody.parent = forOfLoop;
+    block.body.push(forOfLoop);
+
+    const variable = createVariableDeclaration("let", forOfLoop);
+    forOfLoop.left = variable;
+
+    assert.isDefined(visitor.VariableDeclaration);
+
+    visitor.VariableDeclaration(variable);
+
+    expect(report).not.toHaveBeenCalled();
+  });
+
+  it("allows let in for-in loop initializers", () => {
+    const { report, visitor } = createRuleHarness(noTopLevelLetRule, "no-top-level-let/test");
+    const fn = createFunction("processItems");
+    const block = createFunctionBody(fn);
+    fn.body = block;
+
+    const forInLoop: ESTree.ForInStatement = {
+      type: "ForInStatement",
+      left: null,
+      right: createIdentifier("obj"),
+      body: createBlockStatement(undefined),
+      parent: block,
+      ...createSpan(),
+    } as unknown as ESTree.ForInStatement;
+
+    const loopBody = forInLoop.body as ESTree.BlockStatement;
+    loopBody.parent = forInLoop;
+    block.body.push(forInLoop);
+
+    const variable = createVariableDeclaration("let", forInLoop);
+    forInLoop.left = variable;
+
+    assert.isDefined(visitor.VariableDeclaration);
+
+    visitor.VariableDeclaration(variable);
+
+    expect(report).not.toHaveBeenCalled();
+  });
+
+  it("reports let at global scope", () => {
+    const { report, visitor } = createRuleHarness(noTopLevelLetRule, "no-top-level-let/test");
+    const program: ESTree.Program = {
+      type: "Program",
+      body: [],
+      sourceType: "module",
+      parent: undefined,
+      ...createSpan(),
+    };
+    const variable = createVariableDeclaration("let", program);
+
+    assert.isDefined(visitor.VariableDeclaration);
+
+    visitor.VariableDeclaration(variable);
+
+    expect(report).toHaveBeenCalledTimes(1);
+  });
+
+  it("reports let in any function regardless of naming", () => {
     const { report, visitor } = createRuleHarness(noTopLevelLetRule, "no-top-level-let/test");
     const fn = createFunction("usesHelper");
     const block = createFunctionBody(fn);

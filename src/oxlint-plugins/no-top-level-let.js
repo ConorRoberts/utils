@@ -2,54 +2,11 @@ import { defineRule } from "oxlint";
 
 /** @typedef {import("oxlint").ESTree.Node} ESTNode */
 
-/**
- * Get the enclosing function node for a given node
- * @param {ESTNode} node
- * @returns {ESTNode | null}
- */
-const getEnclosingFunction = (node) => {
-  const findFunction = (current) => {
-    if (!current) return null;
-    if (
-      current.type === "FunctionDeclaration" ||
-      current.type === "FunctionExpression" ||
-      current.type === "ArrowFunctionExpression"
-    ) {
-      return current;
-    }
-    return findFunction(current.parent);
-  };
-  return findFunction(node.parent);
-};
-
-/**
- * Check if a node is inside a loop
- * @param {ESTNode} node
- * @param {ESTNode} stopAt - Stop searching when we reach this node
- * @returns {boolean}
- */
-const isInsideLoop = (node, stopAt) => {
-  const checkLoop = (current) => {
-    if (!current || current === stopAt) return false;
-    if (
-      current.type === "ForStatement" ||
-      current.type === "ForInStatement" ||
-      current.type === "ForOfStatement" ||
-      current.type === "WhileStatement" ||
-      current.type === "DoWhileStatement"
-    ) {
-      return true;
-    }
-    return checkLoop(current.parent);
-  };
-  return checkLoop(node.parent);
-};
-
 const rule = defineRule({
   meta: {
     type: "problem",
     docs: {
-      description: "Disallow top-level `let` declarations inside functions to prevent conditional reassignment.",
+      description: "Disallow `let` keyword everywhere except in for loop initializers.",
       recommended: false,
     },
     schema: [],
@@ -66,26 +23,26 @@ const rule = defineRule({
 
         if (node.kind !== "let") return;
 
-        const fn = getEnclosingFunction(node);
-        if (
-          !fn ||
-          (fn.type !== "FunctionDeclaration" &&
-            fn.type !== "FunctionExpression" &&
-            fn.type !== "ArrowFunctionExpression")
-        ) {
-          return;
-        }
-
+        // Only allow let in for loop initializers
         const parent = node.parent;
-        if (!parent || parent.type !== "BlockStatement" || parent.parent !== fn) return;
-
-        // Allow let declarations inside loops
-        if (isInsideLoop(node, fn)) return;
+        if (parent) {
+          // For traditional for loops, check init property
+          if (parent.type === "ForStatement" && parent.init === node) {
+            return;
+          }
+          // For for-in and for-of loops, check left property
+          if (
+            (parent.type === "ForInStatement" || parent.type === "ForOfStatement") &&
+            parent.left === node
+          ) {
+            return;
+          }
+        }
 
         context.report({
           node,
           message:
-            "Avoid using `let` at the top level of functions; prefer `const` with extracted functions to avoid conditional reassignment. Extract conditional logic into a separate function that returns the appropriate value.",
+            "Avoid using `let`; prefer `const` or use `let` only in for loop initializers.",
         });
       },
     });
