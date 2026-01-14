@@ -250,7 +250,10 @@ describe("no-top-level-let rule", () => {
       type: "Program",
       body: [],
       sourceType: "module",
-      parent: undefined,
+      parent: null,
+      hashbang: null,
+      comments: [],
+      tokens: [],
       ...createSpan(),
     };
     const variable = createVariableDeclaration("let", program);
