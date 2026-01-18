@@ -227,5 +227,40 @@ describe("no-emoji rule", () => {
 
       expect(report).toHaveBeenCalledTimes(1);
     });
+
+    it("catches emojis in game mode labels", () => {
+      const { report, visitor } = createRuleHarness(noEmojiRule, "no-emoji/test");
+
+      assert.isDefined(visitor.StringLiteral);
+
+      // Test each label that might contain emojis
+      const labelsWithEmojis = [
+        "⚔️ Bedwars",
+        "🏝️ Skyblock",
+        "🎮 Survival Games",
+        "🌿 Vanilla",
+      ];
+
+      for (const label of labelsWithEmojis) {
+        visitor.StringLiteral(createStringLiteral(label));
+      }
+
+      expect(report).toHaveBeenCalledTimes(4);
+    });
+
+    it("catches bed emoji (🛏️)", () => {
+      const { report, visitor } = createRuleHarness(noEmojiRule, "no-emoji/test");
+      const stringLiteral = createStringLiteral("🛏️ Bedwars");
+
+      assert.isDefined(visitor.StringLiteral);
+      visitor.StringLiteral(stringLiteral);
+
+      expect(report).toHaveBeenCalledTimes(1);
+      expect(report).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: expect.stringContaining("🛏"),
+        }),
+      );
+    });
   });
 });
