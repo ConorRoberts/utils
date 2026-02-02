@@ -14,14 +14,14 @@ import { useStableCallback } from "./useStableCallback";
  * });
  * ```
  */
-export const useOnMount = (callback: () => void): void => {
+export const useOnMount = (callback: React.EffectCallback): void => {
   const stableCallback = useStableCallback(callback);
   const isRun = useRef(false);
 
   useEffect(() => {
     if (!isRun.current) {
       isRun.current = true;
-      stableCallback();
+      return stableCallback();
     }
   }, [stableCallback]);
 };
