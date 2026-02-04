@@ -1,4 +1,4 @@
-import type { ESTree } from "oxlint";
+import type { ESTree } from "oxlint/plugins";
 import { assert, describe, expect, it } from "vitest";
 import { noArrayTypeRule } from "./no-array-type.js";
 import { createRuleHarness, createSpan } from "./test-utils.js";

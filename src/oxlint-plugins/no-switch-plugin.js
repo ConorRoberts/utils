@@ -1,6 +1,6 @@
-import { defineRule } from "oxlint";
+import { defineRule } from "oxlint/plugins";
 
-/** @typedef {import("oxlint").ESTree.Node} ESTNode */
+/** @typedef {import("oxlint/plugins").ESTree.Node} ESTNode */
 
 export const noSwitchRule = defineRule({
   meta: {

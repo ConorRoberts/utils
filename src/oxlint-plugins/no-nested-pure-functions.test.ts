@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ESTree } from "oxlint";
+import type { ESTree } from "oxlint/plugins";
 import { noNestedPureFunctionsRule } from "./no-nested-pure-functions.js";
 import {
 	createFunctionBody,

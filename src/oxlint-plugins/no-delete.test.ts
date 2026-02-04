@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ESTree } from "oxlint";
+import type { ESTree } from "oxlint/plugins";
 import { noDeleteRule } from "./no-delete.js";
 import { createRuleHarness, createSpan } from "./test-utils.js";
 

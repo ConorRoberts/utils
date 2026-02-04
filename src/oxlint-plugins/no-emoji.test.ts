@@ -1,6 +1,6 @@
 import { assert, describe, expect, it } from "vitest";
 
-import type { ESTree } from "oxlint";
+import type { ESTree } from "oxlint/plugins";
 
 import { noEmojiRule } from "./no-emoji.js";
 import { createRuleHarness, createSpan } from "./test-utils.js";

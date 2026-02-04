@@ -1,12 +1,14 @@
 import { assert, describe, expect, it } from "vitest";
 
-import type { ESTree } from "oxlint";
+import type { ESTree } from "oxlint/plugins";
 
 import { noTopLevelLetRule } from "./no-top-level-let.js";
 import {
   createFunctionBody,
   createIdentifier,
+  createIdentifierReference,
   createRuleHarness,
+  createProgram,
   createSpan,
   createVariableDeclaration,
 } from "./test-utils.js";
@@ -57,6 +59,107 @@ const createIfStatement = (parent: ESTree.Node, consequent: ESTree.Statement): E
   test.parent = statement;
 
   return statement;
+};
+
+const createObjectExpression = (): ESTree.ObjectExpression =>
+  ({
+    type: "ObjectExpression",
+    properties: [],
+    ...createSpan(),
+  }) as unknown as ESTree.ObjectExpression;
+
+const createArrayExpression = (): ESTree.ArrayExpression =>
+  ({
+    type: "ArrayExpression",
+    elements: [],
+    ...createSpan(),
+  }) as unknown as ESTree.ArrayExpression;
+
+const createVariableDeclarator = (
+  id: ESTree.BindingIdentifier,
+  init: ESTree.Expression | null,
+  parent: ESTree.VariableDeclaration,
+): ESTree.VariableDeclarator => {
+  const declarator: ESTree.VariableDeclarator = {
+    type: "VariableDeclarator",
+    id,
+    init,
+    parent,
+    ...createSpan(),
+  } as unknown as ESTree.VariableDeclarator;
+
+  id.parent = declarator as unknown as ESTree.Node;
+  if (init) {
+    init.parent = declarator as unknown as ESTree.Node;
+  }
+
+  return declarator;
+};
+
+const createMemberExpression = (
+  object: ESTree.Expression,
+  property: ESTree.Expression,
+  computed = false,
+): ESTree.MemberExpression => {
+  const member: ESTree.MemberExpression = {
+    type: "MemberExpression",
+    object,
+    property,
+    computed,
+    optional: false,
+    ...createSpan(),
+  } as unknown as ESTree.MemberExpression;
+
+  object.parent = member as unknown as ESTree.Node;
+  property.parent = member as unknown as ESTree.Node;
+
+  return member;
+};
+
+const createAssignmentExpression = (
+  left: ESTree.AssignmentTarget,
+  right: ESTree.Expression,
+): ESTree.AssignmentExpression => {
+  const assignment: ESTree.AssignmentExpression = {
+    type: "AssignmentExpression",
+    operator: "=",
+    left,
+    right,
+    ...createSpan(),
+  } as unknown as ESTree.AssignmentExpression;
+
+  left.parent = assignment as unknown as ESTree.Node;
+  right.parent = assignment as unknown as ESTree.Node;
+
+  return assignment;
+};
+
+const createUpdateExpression = (argument: ESTree.Expression): ESTree.UpdateExpression => {
+  const update: ESTree.UpdateExpression = {
+    type: "UpdateExpression",
+    operator: "++",
+    prefix: false,
+    argument,
+    ...createSpan(),
+  } as unknown as ESTree.UpdateExpression;
+
+  argument.parent = update as unknown as ESTree.Node;
+
+  return update;
+};
+
+const createCallExpression = (callee: ESTree.Expression): ESTree.CallExpression => {
+  const call: ESTree.CallExpression = {
+    type: "CallExpression",
+    callee,
+    arguments: [],
+    optional: false,
+    ...createSpan(),
+  } as unknown as ESTree.CallExpression;
+
+  callee.parent = call as unknown as ESTree.Node;
+
+  return call;
 };
 
 describe("no-top-level-let rule", () => {
@@ -277,5 +380,100 @@ describe("no-top-level-let rule", () => {
     visitor.VariableDeclaration(variable);
 
     expect(report).toHaveBeenCalledTimes(1);
+  });
+
+  it("reports mutation of top-level const object properties", () => {
+    const { report, visitor } = createRuleHarness(noTopLevelLetRule, "no-top-level-let/test");
+    const program = createProgram();
+
+    const declaration = createVariableDeclaration("const", program);
+    const id = createIdentifier("state");
+    const init = createObjectExpression();
+    const declarator = createVariableDeclarator(id, init, declaration);
+    declaration.declarations.push(declarator);
+    program.body.push(declaration);
+
+    const left = createMemberExpression(createIdentifierReference("state"), createIdentifierReference("count"));
+    const right = createIdentifierReference("next");
+    const assignment = createAssignmentExpression(left as unknown as ESTree.AssignmentTarget, right);
+
+    assert.isDefined(visitor.VariableDeclarator);
+    assert.isDefined(visitor.AssignmentExpression);
+
+    visitor.VariableDeclarator(declarator);
+    visitor.AssignmentExpression(assignment);
+
+    expect(report).toHaveBeenCalledTimes(1);
+    expect(report).toHaveBeenCalledWith(
+      expect.objectContaining({
+        node: assignment,
+        messageId: "topLevelMutation",
+        data: { name: "state" },
+      }),
+    );
+  });
+
+  it("reports mutation via array mutating methods on top-level const objects", () => {
+    const { report, visitor } = createRuleHarness(noTopLevelLetRule, "no-top-level-let/test");
+    const program = createProgram();
+
+    const declaration = createVariableDeclaration("const", program);
+    const id = createIdentifier("store");
+    const init = createArrayExpression();
+    const declarator = createVariableDeclarator(id, init, declaration);
+    declaration.declarations.push(declarator);
+    program.body.push(declaration);
+
+    const root = createIdentifierReference("store");
+    const member = createMemberExpression(root, createIdentifierReference("push"));
+    const call = createCallExpression(member);
+
+    assert.isDefined(visitor.VariableDeclarator);
+    assert.isDefined(visitor.CallExpression);
+
+    visitor.VariableDeclarator(declarator);
+    visitor.CallExpression(call);
+
+    expect(report).toHaveBeenCalledTimes(1);
+    expect(report).toHaveBeenCalledWith(
+      expect.objectContaining({
+        node: call,
+        messageId: "topLevelMutation",
+        data: { name: "store" },
+      }),
+    );
+  });
+
+  it("reports mutation via update expressions on top-level const objects", () => {
+    const { report, visitor } = createRuleHarness(noTopLevelLetRule, "no-top-level-let/test");
+    const program = createProgram();
+
+    const declaration = createVariableDeclaration("const", program);
+    const id = createIdentifier("counter");
+    const init = createObjectExpression();
+    const declarator = createVariableDeclarator(id, init, declaration);
+    declaration.declarations.push(declarator);
+    program.body.push(declaration);
+
+    const member = createMemberExpression(
+      createIdentifierReference("counter"),
+      createIdentifierReference("value"),
+    );
+    const update = createUpdateExpression(member);
+
+    assert.isDefined(visitor.VariableDeclarator);
+    assert.isDefined(visitor.UpdateExpression);
+
+    visitor.VariableDeclarator(declarator);
+    visitor.UpdateExpression(update);
+
+    expect(report).toHaveBeenCalledTimes(1);
+    expect(report).toHaveBeenCalledWith(
+      expect.objectContaining({
+        node: update,
+        messageId: "topLevelMutation",
+        data: { name: "counter" },
+      }),
+    );
   });
 });

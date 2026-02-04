@@ -1,6 +1,6 @@
 import { assert, describe, expect, it } from "vitest";
 
-import type { ESTree } from "oxlint";
+import type { ESTree } from "oxlint/plugins";
 
 import { noComponentDateInstantiationRule } from "./no-component-date-instantiation.js";
 import {

@@ -1,5 +1,5 @@
 import { assert, describe, expect, it } from "vitest";
-import type { ESTree } from "oxlint";
+import type { ESTree } from "oxlint/plugins";
 import { noTypeCastRule } from "./no-type-cast.js";
 import { createRuleHarness, createSpan, createIdentifier } from "./test-utils.js";
 

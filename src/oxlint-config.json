@@ -46,6 +46,7 @@
 		"conorroberts/no-emoji": "error",
 		"conorroberts/no-component-date-instantiation": "warn",
 		"conorroberts/no-component-pure-functions": "warn",
+		"conorroberts/no-nested-conditionals": "error",
 		"conorroberts/no-nested-pure-functions": "error",
 		"conorroberts/jsx-component-pascal-case": "error",
 		"conorroberts/pretty-props": "error",

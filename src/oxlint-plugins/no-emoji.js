@@ -1,7 +1,7 @@
-import { defineRule } from "oxlint";
+import { defineRule } from "oxlint/plugins";
 import { EMOJI_REGEX as VALIBOT_EMOJI_REGEX } from "valibot";
 
-/** @typedef {import("oxlint").ESTree.Node} ESTNode */
+/** @typedef {import("oxlint/plugins").ESTree.Node} ESTNode */
 
 /**
  * Regex pattern to match emojis within a string

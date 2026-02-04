@@ -1,14 +1,14 @@
-import { defineRule } from "oxlint";
+import { defineRule } from "oxlint/plugins";
 
 /**
- * @typedef {import("oxlint").Context} RuleContext
- * @typedef {import("oxlint").ESTree.Node} ESTNode
- * @typedef {import("oxlint").ESTree.Expression} ESTExpression
- * @typedef {import("oxlint").ESTree.Pattern} ESTPattern
- * @typedef {import("oxlint").ESTree.ReturnStatement} ReturnStatementNode
- * @typedef {import("oxlint").ESTree.VariableDeclarator} VariableDeclaratorNode
- * @typedef {import("oxlint").ESTree.AssignmentExpression} AssignmentExpressionNode
- * @typedef {import("oxlint").ESTree.Function | import("oxlint").ESTree.ArrowFunctionExpression} FunctionLikeNode
+ * @typedef {import("oxlint/plugins").Context} RuleContext
+ * @typedef {import("oxlint/plugins").ESTree.Node} ESTNode
+ * @typedef {import("oxlint/plugins").ESTree.Expression} ESTExpression
+ * @typedef {import("oxlint/plugins").ESTree.Pattern} ESTPattern
+ * @typedef {import("oxlint/plugins").ESTree.ReturnStatement} ReturnStatementNode
+ * @typedef {import("oxlint/plugins").ESTree.VariableDeclarator} VariableDeclaratorNode
+ * @typedef {import("oxlint/plugins").ESTree.AssignmentExpression} AssignmentExpressionNode
+ * @typedef {import("oxlint/plugins").ESTree.Function | import("oxlint/plugins").ESTree.ArrowFunctionExpression} FunctionLikeNode
  */
 
 /**

@@ -1,4 +1,4 @@
-import { definePlugin } from "oxlint";
+import { definePlugin } from "oxlint/plugins";
 
 import { jsxComponentPascalCaseRule } from "./jsx-component-pascal-case.js";
 import { noArrayTypeRule } from "./no-array-type.js";
@@ -9,6 +9,7 @@ import { noEmojiRule } from "./no-emoji.js";
 import { noFinallyRule } from "./no-finally.js";
 import { noIifeRule } from "./no-iife.js";
 import { noInlineComponentsRule } from "./no-inline-components.js";
+import { noNestedConditionalsRule } from "./no-nested-conditionals.js";
 import { noNestedPureFunctionsRule } from "./no-nested-pure-functions.js";
 import { noPromiseThenRule } from "./no-promise-then.js";
 import { noReactNamespaceRule } from "./no-react-namespace.js";
@@ -31,6 +32,7 @@ const plugin = definePlugin({
     "no-finally": noFinallyRule,
     "no-iife": noIifeRule,
     "no-inline-components": noInlineComponentsRule,
+    "no-nested-conditionals": noNestedConditionalsRule,
     "no-nested-pure-functions": noNestedPureFunctionsRule,
     "no-promise-then": noPromiseThenRule,
     "no-react-namespace": noReactNamespaceRule,

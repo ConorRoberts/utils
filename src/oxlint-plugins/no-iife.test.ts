@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ESTree } from "oxlint";
+import type { ESTree } from "oxlint/plugins";
 import { noIifeRule } from "./no-iife.js";
 import { createRuleHarness, createSpan, createFunctionBody } from "./test-utils.js";
 

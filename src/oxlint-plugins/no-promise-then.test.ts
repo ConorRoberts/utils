@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ESTree } from "oxlint";
+import type { ESTree } from "oxlint/plugins";
 import { noPromiseThenRule } from "./no-promise-then.js";
 import { createRuleHarness, createSpan, createIdentifier } from "./test-utils.js";
 

@@ -1,6 +1,6 @@
 import { vi } from "vitest";
 
-import type { Context, CreateOnceRule, CreateRule, ESTree, Rule, SourceCode } from "oxlint";
+import type { Context, CreateOnceRule, CreateRule, ESTree, Rule, SourceCode } from "oxlint/plugins";
 
 export const createSpan = () => ({
   start: 0,
@@ -126,11 +126,11 @@ export const createProgram = () => {
 type RuleVisitor = ReturnType<CreateRule["create"]> | ReturnType<CreateOnceRule["createOnce"]>;
 type RuleContext = Pick<Context, "id" | "options" | "report">;
 
-export const createRuleHarness = (rule: Rule, id: string) => {
+export const createRuleHarness = (rule: Rule, id: string, options: Context["options"] = []) => {
   const report: RuleContext["report"] = vi.fn();
   const context: RuleContext = {
     id,
-    options: [],
+    options,
     report,
   };
 
@@ -168,7 +168,7 @@ const createOxlintContext = (context: RuleContext): Context => {
     },
   };
 
-  // @ts-expect-error - Oxlint's Context carries private state we cannot initialize in tests.
+  // @ts-expect-error - Stub is missing getFilename, getPhysicalFilename, getCwd, etc. which are not needed for tests
   return stub;
 };
 

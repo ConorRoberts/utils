@@ -1,4 +1,4 @@
-import type { ESTree } from "oxlint";
+import type { ESTree } from "oxlint/plugins";
 import { assert, describe, expect, it } from "vitest";
 import { jsxComponentPascalCaseRule } from "./jsx-component-pascal-case.js";
 import { createFunctionBody, createIdentifier, createJSXElement, createRuleHarness, createSpan } from "./test-utils";
