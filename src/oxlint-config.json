@@ -1,70 +1,78 @@
 {
-  "$schema": "../node_modules/oxlint/configuration_schema.json",
-  "plugins": ["import", "typescript", "unicorn", "react", "react-perf", "oxc", "node", "promise"],
-  "env": {
-    "browser": true
-  },
-  "ignorePatterns": [
-    "packages/*/src/routeTree.gen.ts",
-    "packages/*/.output",
-    "packages/*/vite-plugins",
-    "packages/*/dist",
-    "packages/common/src/oxlint-plugins",
-    "**/node_modules"
-  ],
-  "settings": {},
-  "rules": {
-    "sort-imports": "error",
-    "@typescript-eslint/ban-ts-comment": "error",
-    "@typescript-eslint/no-floating-promises": "off",
-    "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/no-non-null-assertion": "error",
-    "react/button-has-type": "deny",
-    "react/rules-of-hooks": "deny",
-    "no-nested-ternary": "deny",
-    "react/exhaustive-deps": "deny",
-    "react/no-unstable-nested-components": "error",
-    "typescript/no-floating-promises": "off",
-    "no-unused-vars": "warn",
-    "typescript/no-import-type-side-effects": "deny",
-    "@typescript-eslint/consistent-type-imports": "deny",
-    "conorroberts/no-inline-components": "error",
-    "conorroberts/no-switch": "error",
-    "conorroberts/no-delete": "error",
-    "conorroberts/no-top-level-let": "error",
-    "conorroberts/no-finally": "error",
-    "conorroberts/no-react-namespace": "error",
-    "conorroberts/no-type-cast": "warn",
-    "conorroberts/no-emoji": "error",
-    "conorroberts/no-component-date-instantiation": "warn",
-    "conorroberts/no-component-pure-functions": "warn",
-    "conorroberts/no-nested-conditionals": "error",
-    "conorroberts/no-nested-pure-functions": "error",
-    "conorroberts/jsx-component-pascal-case": "error",
-    "conorroberts/pretty-props": "error",
-    "conorroberts/no-array-type": "error",
-    "conorroberts/no-iife": "error",
-    "conorroberts/no-promise-then": "error",
-    "react/self-closing-comp": [
-      "deny",
-      {
-        "html": false
-      }
-    ]
-  },
-  "overrides": [
-    {
-      "files": [
-        "packages/**/*.test.ts",
-        "packages/**/*.test.tsx",
-        "packages/**/*.spec.ts",
-        "packages/**/*.spec.tsx",
-        "packages/**/__tests__/**"
-      ],
-      "rules": {
-        "@typescript-eslint/no-explicit-any": "off",
-        "conorroberts/no-type-cast": "off"
-      }
-    }
-  ]
+	"$schema": "../node_modules/oxlint/configuration_schema.json",
+	"plugins": [
+		"import",
+		"typescript",
+		"unicorn",
+		"react",
+		"react-perf",
+		"oxc",
+		"node",
+		"promise"
+	],
+	"env": {
+		"browser": true
+	},
+	"ignorePatterns": [
+		"packages/*/src/routeTree.gen.ts",
+		"packages/*/.output",
+		"packages/*/vite-plugins",
+		"packages/*/dist",
+		"packages/common/src/oxlint-plugins",
+		"**/node_modules"
+	],
+	"settings": {},
+	"rules": {
+		"@typescript-eslint/ban-ts-comment": "error",
+		"@typescript-eslint/no-floating-promises": "off",
+		"@typescript-eslint/no-explicit-any": "error",
+		"@typescript-eslint/no-non-null-assertion": "error",
+		"react/button-has-type": "deny",
+		"react/rules-of-hooks": "deny",
+		"no-nested-ternary": "deny",
+		"react/exhaustive-deps": "deny",
+		"react/no-unstable-nested-components": "error",
+		"typescript/no-floating-promises": "off",
+		"no-unused-vars": "warn",
+		"typescript/no-import-type-side-effects": "deny",
+		"@typescript-eslint/consistent-type-imports": "deny",
+		"conorroberts/no-inline-components": "error",
+		"conorroberts/no-switch": "error",
+		"conorroberts/no-delete": "error",
+		"conorroberts/no-top-level-let": "error",
+		"conorroberts/no-finally": "error",
+		"conorroberts/no-react-namespace": "error",
+		"conorroberts/no-type-cast": "warn",
+		"conorroberts/no-emoji": "error",
+		"conorroberts/no-component-date-instantiation": "warn",
+		"conorroberts/no-component-pure-functions": "warn",
+		"conorroberts/no-nested-conditionals": "error",
+		"conorroberts/no-nested-pure-functions": "error",
+		"conorroberts/jsx-component-pascal-case": "error",
+		"conorroberts/pretty-props": "error",
+		"conorroberts/no-array-type": "error",
+		"conorroberts/no-iife": "error",
+		"conorroberts/no-promise-then": "error",
+		"react/self-closing-comp": [
+			"deny",
+			{
+				"html": false
+			}
+		]
+	},
+	"overrides": [
+		{
+			"files": [
+				"packages/**/*.test.ts",
+				"packages/**/*.test.tsx",
+				"packages/**/*.spec.ts",
+				"packages/**/*.spec.tsx",
+				"packages/**/__tests__/**"
+			],
+			"rules": {
+				"@typescript-eslint/no-explicit-any": "off",
+				"conorroberts/no-type-cast": "off"
+			}
+		}
+	]
 }
