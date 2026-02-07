@@ -347,7 +347,7 @@ describe("no-top-level-let rule", () => {
     expect(report).not.toHaveBeenCalled();
   });
 
-  it("reports let at global scope", () => {
+  it("allows let at module scope", () => {
     const { report, visitor } = createRuleHarness(noTopLevelLetRule, "no-top-level-let/test");
     const program: ESTree.Program = {
       type: "Program",
@@ -365,7 +365,7 @@ describe("no-top-level-let rule", () => {
 
     visitor.VariableDeclaration(variable);
 
-    expect(report).toHaveBeenCalledTimes(1);
+    expect(report).not.toHaveBeenCalled();
   });
 
   it("reports let in any function regardless of naming", () => {

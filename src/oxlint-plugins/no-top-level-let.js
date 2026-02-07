@@ -6,12 +6,12 @@ const rule = defineRule({
   meta: {
     type: "problem",
     docs: {
-      description: "Disallow `let` keyword everywhere except in for loop initializers.",
+      description: "Disallow `let` keyword everywhere except at module scope and in for loop initializers.",
       recommended: false,
     },
     schema: [],
     messages: {
-      noLet: "Avoid `let`. Use `const`, or limit `let` to `for` loop initializers when a counter must change.",
+      noLet: "Avoid `let`. Use `const`, or limit `let` to module scope or `for` loop initializers.",
       topLevelMutation:
         "Do not mutate properties of top-level const `{{name}}`. Move the mutable state into a function or update immutably (create a new object/array).",
     },
@@ -132,7 +132,10 @@ const rule = defineRule({
 
         if (node.kind !== "let") return;
 
-        // Only allow let in for loop initializers
+        // Allow let at module scope
+        if (isTopLevelVariableDeclaration(node)) return;
+
+        // Allow let in for loop initializers
         const parent = node.parent;
         if (parent) {
           // For traditional for loops, check init property
