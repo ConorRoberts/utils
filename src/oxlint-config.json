@@ -23,6 +23,7 @@
 	],
 	"settings": {},
 	"rules": {
+		"sort-imports": "error",
 		"@typescript-eslint/ban-ts-comment": "error",
 		"@typescript-eslint/no-floating-promises": "off",
 		"@typescript-eslint/no-explicit-any": "error",
