@@ -15,9 +15,7 @@ const isNode = (node) => Boolean(node && typeof node === "object" && "type" in n
  * @returns {boolean}
  */
 const isFunctionLike = (node) =>
-  node.type === "FunctionDeclaration" ||
-  node.type === "FunctionExpression" ||
-  node.type === "ArrowFunctionExpression";
+  node.type === "FunctionDeclaration" || node.type === "FunctionExpression" || node.type === "ArrowFunctionExpression";
 
 /**
  * Treat standalone blocks as separate scopes. Blocks used as conditional/loop bodies
@@ -49,8 +47,7 @@ export const noNestedConditionalsRule = defineRule({
   meta: {
     type: "problem",
     docs: {
-      description:
-        "Disallow nesting conditionals more than a configured depth within a single scope",
+      description: "Disallow nesting conditionals more than a configured depth within a single scope",
       recommended: true,
     },
     schema: [
@@ -67,10 +64,7 @@ export const noNestedConditionalsRule = defineRule({
     ],
   },
   createOnce(context) {
-    const maxDepth =
-      typeof context.options?.[0]?.maxDepth === "number"
-        ? context.options[0].maxDepth
-        : DEFAULT_MAX_DEPTH;
+    const maxDepth = DEFAULT_MAX_DEPTH;
 
     const scopeStack = [];
 

@@ -67,4 +67,3 @@ const rule = defineRule({
 });
 
 export const noTypeCastRule = rule;
-

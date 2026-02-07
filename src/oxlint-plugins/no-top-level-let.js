@@ -11,8 +11,7 @@ const rule = defineRule({
     },
     schema: [],
     messages: {
-      noLet:
-        "Avoid `let`. Use `const`, or limit `let` to `for` loop initializers when a counter must change.",
+      noLet: "Avoid `let`. Use `const`, or limit `let` to `for` loop initializers when a counter must change.",
       topLevelMutation:
         "Do not mutate properties of top-level const `{{name}}`. Move the mutable state into a function or update immutably (create a new object/array).",
     },
@@ -141,10 +140,7 @@ const rule = defineRule({
             return;
           }
           // For for-in and for-of loops, check left property
-          if (
-            (parent.type === "ForInStatement" || parent.type === "ForOfStatement") &&
-            parent.left === node
-          ) {
+          if ((parent.type === "ForInStatement" || parent.type === "ForOfStatement") && parent.left === node) {
             return;
           }
         }

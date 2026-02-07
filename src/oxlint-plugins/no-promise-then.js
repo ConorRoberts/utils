@@ -6,7 +6,7 @@ const rule = defineRule({
   meta: {
     type: "problem",
     docs: {
-      description: 'Disallow using .then() on promises. Use async/await instead.',
+      description: "Disallow using .then() on promises. Use async/await instead.",
       recommended: true,
     },
     schema: [],
@@ -22,13 +22,10 @@ const rule = defineRule({
         const memberExpression = node.callee;
 
         // Check if the property being called is "then"
-        if (
-          memberExpression.property.type === "Identifier" &&
-          memberExpression.property.name === "then"
-        ) {
+        if (memberExpression.property.type === "Identifier" && memberExpression.property.name === "then") {
           context.report({
             node,
-            message: 'Avoid using .then() on promises. Use async/await instead.',
+            message: "Avoid using .then() on promises. Use async/await instead.",
           });
         }
       },

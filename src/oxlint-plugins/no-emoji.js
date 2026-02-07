@@ -7,10 +7,7 @@ import { EMOJI_REGEX as VALIBOT_EMOJI_REGEX } from "valibot";
  * Regex pattern to match emojis within a string
  * Based on valibot's EMOJI_REGEX but without anchors and with global flag
  */
-const EMOJI_REGEX = new RegExp(
-  VALIBOT_EMOJI_REGEX.source.slice(1, -1),
-  "gu",
-);
+const EMOJI_REGEX = new RegExp(VALIBOT_EMOJI_REGEX.source.slice(1, -1), "gu");
 
 /**
  * Find emojis in a string
@@ -109,4 +106,3 @@ const rule = defineRule({
 });
 
 export const noEmojiRule = rule;
-

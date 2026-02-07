@@ -30,7 +30,7 @@ describe("no-promise-then", () => {
 
     expect(report).toHaveBeenCalledWith({
       node,
-      message: 'Avoid using .then() on promises. Use async/await instead.',
+      message: "Avoid using .then() on promises. Use async/await instead.",
     });
   });
 
@@ -67,7 +67,7 @@ describe("no-promise-then", () => {
 
     expect(report).toHaveBeenCalledWith({
       node,
-      message: 'Avoid using .then() on promises. Use async/await instead.',
+      message: "Avoid using .then() on promises. Use async/await instead.",
     });
   });
 
@@ -112,7 +112,7 @@ describe("no-promise-then", () => {
 
     expect(report).toHaveBeenCalledWith({
       node,
-      message: 'Avoid using .then() on promises. Use async/await instead.',
+      message: "Avoid using .then() on promises. Use async/await instead.",
     });
   });
 
@@ -242,11 +242,11 @@ describe("no-promise-then", () => {
     expect(report).toHaveBeenCalledTimes(2);
     expect(report).toHaveBeenCalledWith({
       node: firstThenNode,
-      message: 'Avoid using .then() on promises. Use async/await instead.',
+      message: "Avoid using .then() on promises. Use async/await instead.",
     });
     expect(report).toHaveBeenCalledWith({
       node: secondThenNode,
-      message: 'Avoid using .then() on promises. Use async/await instead.',
+      message: "Avoid using .then() on promises. Use async/await instead.",
     });
   });
 });

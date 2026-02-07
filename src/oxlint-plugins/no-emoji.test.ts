@@ -234,12 +234,7 @@ describe("no-emoji rule", () => {
       assert.isDefined(visitor.StringLiteral);
 
       // Test each label that might contain emojis
-      const labelsWithEmojis = [
-        "⚔️ Bedwars",
-        "🏝️ Skyblock",
-        "🎮 Survival Games",
-        "🌿 Vanilla",
-      ];
+      const labelsWithEmojis = ["⚔️ Bedwars", "🏝️ Skyblock", "🎮 Survival Games", "🌿 Vanilla"];
 
       for (const label of labelsWithEmojis) {
         visitor.StringLiteral(createStringLiteral(label));

@@ -74,12 +74,7 @@ export class ImageUtils<ImageIds extends Record<string, any>> {
   private accountHash: string;
   private _imageIds: ImageIds | undefined;
 
-  constructor(args: {
-    accountId: string;
-    accountHash: string;
-    blacklist?: string[];
-    imageIds?: ImageIds;
-  }) {
+  constructor(args: { accountId: string; accountHash: string; blacklist?: string[]; imageIds?: ImageIds }) {
     this.accountId = args.accountId;
     this.accountHash = args.accountHash;
 

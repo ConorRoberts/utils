@@ -31,4 +31,3 @@ const rule = defineRule({
 });
 
 export const noFinallyRule = rule;
-

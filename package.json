@@ -1,18 +1,13 @@
 {
   "name": "@conorroberts/utils",
-  "description": "",
+  "version": "0.0.88",
   "private": false,
-  "type": "module",
-  "scripts": {
-    "dev": "tsdown --watch",
-    "test": "vitest run",
-    "typecheck": "tsc --noEmit",
-    "build": "tsc --noEmit && tsdown",
-    "build:clean": "tsc --noEmit && tsdown --clean"
-  },
+  "description": "",
+  "license": "ISC",
   "files": [
     "dist/**"
   ],
+  "type": "module",
   "exports": {
     "./env": {
       "types": "./dist/env.d.mts",
@@ -34,6 +29,16 @@
       "default": "./dist/oxlint/index.mjs"
     }
   },
+  "scripts": {
+    "dev": "tsdown --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit && tsdown",
+    "build:clean": "tsc --noEmit && tsdown --clean",
+    "lint": "oxlint -c .oxlintrc.json --fix --fix-suggestions --fix-dangerously --type-aware",
+    "lint:errors": "oxlint -c .oxlintrc.json --fix --fix-suggestions --fix-dangerously --type-aware --quiet",
+    "format": "oxfmt ."
+  },
   "dependencies": {
     "dayjs": "1.11.19",
     "nanoid": "5.1.6",
@@ -42,21 +47,19 @@
     "remeda": "2.32.0",
     "valibot": "1.1.0"
   },
-  "peerDependencies": {
-    "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
-  },
-  "license": "ISC",
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
     "@testing-library/react": "16.3.0",
     "@types/node": "25.0.1",
     "@types/react": "19.2.7",
     "jsdom": "27.4.0",
+    "oxfmt": "0.28.0",
     "react": "19.2.3",
     "tsdown": "0.18.2",
     "typescript": "5.9.3",
     "vitest": "4.0.15"
   },
-  "version": "0.0.88"
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  }
 }

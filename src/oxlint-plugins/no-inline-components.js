@@ -71,9 +71,9 @@ export const getEnclosingFunction = (node) => {
     if (isFunctionLike(current)) {
       return current;
     }
-    return findFunction(isNode(current) ? current.parent ?? null : null);
+    return findFunction(isNode(current) ? (current.parent ?? null) : null);
   };
-  return findFunction(isNode(node) ? node.parent ?? null : null);
+  return findFunction(isNode(node) ? (node.parent ?? null) : null);
 };
 
 /**
@@ -88,16 +88,16 @@ const isFunctionUsedAsJsxProp = (node) => {
     if (isFunctionLike(current)) {
       return false;
     }
-    return checkJsxProp(isNode(current) ? current.parent ?? null : null);
+    return checkJsxProp(isNode(current) ? (current.parent ?? null) : null);
   };
-  return checkJsxProp(isNode(node) ? node.parent ?? null : null);
+  return checkJsxProp(isNode(node) ? (node.parent ?? null) : null);
 };
 
 /**
  * @param {FunctionLikeNode} node
  */
 const isFunctionImmediatelyInvoked = (node) => {
-  const parent = isNode(node) ? node.parent ?? null : null;
+  const parent = isNode(node) ? (node.parent ?? null) : null;
   if (!parent) return false;
 
   // Check if the function is the callee of a CallExpression (i.e., it's immediately invoked)
@@ -535,4 +535,3 @@ const rule = defineRule({
 });
 
 export const noInlineComponentsRule = rule;
-

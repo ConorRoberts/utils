@@ -1,0 +1,55 @@
+{
+  "[proto3]": {
+    "editor.defaultFormatter": "bufbuild.vscode-buf",
+    "editor.formatOnSave": true
+  },
+  "rust-analyzer.linkedProjects": ["packages/rust/Cargo.toml"],
+  "files.watcherExclude": {
+    "**/routeTree.gen.ts": true,
+    "packages/*/dist": true,
+    "packages/*/.react-router": true,
+    "packages/*/.turbo": true
+  },
+  "search.exclude": {
+    "**/routeTree.gen.ts": true,
+    "packages/*/dist": true,
+    "packages/*/.react-router": true,
+    "packages/*/.turbo": true
+  },
+  "files.readonlyInclude": {
+    "**/routeTree.gen.ts": true,
+    "packages/*/dist": true,
+    "packages/*/.react-router": true,
+    "packages/*/.turbo": true
+  },
+  "oxc.lint.run": "onType",
+  "oxc.typeAware": true,
+  "oxc.fixKind": "safe_fix_or_suggestion",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always",
+    "source.fixAll.oxc": "always"
+  },
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
+  }
+}

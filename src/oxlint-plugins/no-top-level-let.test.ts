@@ -455,10 +455,7 @@ describe("no-top-level-let rule", () => {
     declaration.declarations.push(declarator);
     program.body.push(declaration);
 
-    const member = createMemberExpression(
-      createIdentifierReference("counter"),
-      createIdentifierReference("value"),
-    );
+    const member = createMemberExpression(createIdentifierReference("counter"), createIdentifierReference("value"));
     const update = createUpdateExpression(member);
 
     assert.isDefined(visitor.VariableDeclarator);

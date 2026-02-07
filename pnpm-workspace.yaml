@@ -2,4 +2,4 @@ ignoredBuiltDependencies:
   - esbuild
 
 onlyBuiltDependencies:
-  - '@biomejs/biome'
+  - "@biomejs/biome"

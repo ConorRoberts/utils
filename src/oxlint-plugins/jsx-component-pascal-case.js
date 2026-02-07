@@ -214,4 +214,3 @@ const rule = defineRule({
 });
 
 export const jsxComponentPascalCaseRule = rule;
-

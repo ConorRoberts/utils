@@ -22,10 +22,7 @@ const rule = defineRule({
         const { callee } = node;
 
         // Check if callee is a FunctionExpression or ArrowFunctionExpression
-        if (
-          callee.type === "FunctionExpression" ||
-          callee.type === "ArrowFunctionExpression"
-        ) {
+        if (callee.type === "FunctionExpression" || callee.type === "ArrowFunctionExpression") {
           context.report({
             node,
             message:

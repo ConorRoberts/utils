@@ -42,9 +42,7 @@ const createIfStatement = (
   return ifStmt;
 };
 
-const createConditionalExpression = (
-  testName: string,
-): ESTree.ConditionalExpression => {
+const createConditionalExpression = (testName: string): ESTree.ConditionalExpression => {
   const test = createIdentifierReference(testName);
   const consequent = createIdentifierReference("x");
   const alternate = createIdentifierReference("y");
@@ -67,10 +65,7 @@ const createConditionalExpression = (
 
 describe("no-nested-conditionals", () => {
   it("should report when nesting exceeds two levels", () => {
-    const { report, visitor } = createRuleHarness(
-      noNestedConditionalsRule,
-      "no-nested-conditionals",
-    );
+    const { report, visitor } = createRuleHarness(noNestedConditionalsRule, "no-nested-conditionals");
 
     const program = createProgram();
 
@@ -103,16 +98,11 @@ describe("no-nested-conditionals", () => {
     visitor["Program:exit"]?.(program);
 
     expect(report).toHaveBeenCalledTimes(1);
-    expect(report).toHaveBeenCalledWith(
-      expect.objectContaining({ node: if3 }),
-    );
+    expect(report).toHaveBeenCalledWith(expect.objectContaining({ node: if3 }));
   });
 
   it("should allow nesting up to two levels", () => {
-    const { report, visitor } = createRuleHarness(
-      noNestedConditionalsRule,
-      "no-nested-conditionals",
-    );
+    const { report, visitor } = createRuleHarness(noNestedConditionalsRule, "no-nested-conditionals");
 
     const program = createProgram();
 
@@ -137,10 +127,7 @@ describe("no-nested-conditionals", () => {
   });
 
   it("should reset nesting in a standalone block", () => {
-    const { report, visitor } = createRuleHarness(
-      noNestedConditionalsRule,
-      "no-nested-conditionals",
-    );
+    const { report, visitor } = createRuleHarness(noNestedConditionalsRule, "no-nested-conditionals");
 
     const program = createProgram();
     const standaloneBlock = createBlockStatement(program);
@@ -168,10 +155,7 @@ describe("no-nested-conditionals", () => {
   });
 
   it("should not count else-if as additional depth", () => {
-    const { report, visitor } = createRuleHarness(
-      noNestedConditionalsRule,
-      "no-nested-conditionals",
-    );
+    const { report, visitor } = createRuleHarness(noNestedConditionalsRule, "no-nested-conditionals");
 
     const program = createProgram();
 
@@ -201,10 +185,7 @@ describe("no-nested-conditionals", () => {
   });
 
   it("should count conditional expressions toward nesting", () => {
-    const { report, visitor } = createRuleHarness(
-      noNestedConditionalsRule,
-      "no-nested-conditionals",
-    );
+    const { report, visitor } = createRuleHarness(noNestedConditionalsRule, "no-nested-conditionals");
 
     const program = createProgram();
 
@@ -234,26 +215,22 @@ describe("no-nested-conditionals", () => {
 
     // Visit order: enter conditional while in if1, then enter if2 while conditional is still active
     visitor.Program?.(program);
-    visitor.IfStatement?.(if1);  // depth: 1
-    visitor.ConditionalExpression?.(conditionalExpr);  // depth: 2 (at threshold, no report)
-    visitor.IfStatement?.(if2);  // depth: 3 (exceeds, reports)
-    visitor["IfStatement:exit"]?.(if2);  // depth: 2
-    visitor["ConditionalExpression:exit"]?.(conditionalExpr);  // depth: 1
-    visitor["IfStatement:exit"]?.(if1);  // depth: 0
+    visitor.IfStatement?.(if1); // depth: 1
+    visitor.ConditionalExpression?.(conditionalExpr); // depth: 2 (at threshold, no report)
+    visitor.IfStatement?.(if2); // depth: 3 (exceeds, reports)
+    visitor["IfStatement:exit"]?.(if2); // depth: 2
+    visitor["ConditionalExpression:exit"]?.(conditionalExpr); // depth: 1
+    visitor["IfStatement:exit"]?.(if1); // depth: 0
     visitor["Program:exit"]?.(program);
 
     expect(report).toHaveBeenCalledTimes(1);
-    expect(report).toHaveBeenCalledWith(
-      expect.objectContaining({ node: if2 }),
-    );
+    expect(report).toHaveBeenCalledWith(expect.objectContaining({ node: if2 }));
   });
 
   it("should respect configured maxDepth", () => {
-    const { report, visitor } = createRuleHarness(
-      noNestedConditionalsRule,
-      "no-nested-conditionals",
-      [{ maxDepth: 1 }],
-    );
+    const { report, visitor } = createRuleHarness(noNestedConditionalsRule, "no-nested-conditionals", [
+      { maxDepth: 1 },
+    ]);
 
     const program = createProgram();
 
@@ -275,8 +252,6 @@ describe("no-nested-conditionals", () => {
     visitor["Program:exit"]?.(program);
 
     expect(report).toHaveBeenCalledTimes(1);
-    expect(report).toHaveBeenCalledWith(
-      expect.objectContaining({ node: if2 }),
-    );
+    expect(report).toHaveBeenCalledWith(expect.objectContaining({ node: if2 }));
   });
 });

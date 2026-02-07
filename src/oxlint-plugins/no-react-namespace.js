@@ -100,4 +100,3 @@ const rule = defineRule({
 });
 
 export const noReactNamespaceRule = rule;
-

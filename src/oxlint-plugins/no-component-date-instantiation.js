@@ -197,4 +197,3 @@ const rule = defineRule({
 });
 
 export const noComponentDateInstantiationRule = rule;
-
