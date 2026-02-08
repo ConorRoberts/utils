@@ -1,5 +1,5 @@
-import { defineConfig } from "tsdown";
 import { copyFileSync, mkdirSync } from "node:fs";
+import { defineConfig } from "tsdown";
 
 export default defineConfig({
   format: ["esm"],
@@ -9,17 +9,22 @@ export default defineConfig({
   entry: {
     env: "src/env.ts",
     images: "src/images.ts",
+    db: "src/db/index.ts",
     react: "src/react/index.ts",
     "oxlint/index": "src/oxlint-plugins/index.js",
   },
   onSuccess: async () => {
-    const targetDir = "dist/oxlint";
-    const targetFile = `${targetDir}/config.json`;
+    const copies = [
+      { src: "src/oxlint-config.json", dest: "dist/oxlint/config.json" },
+      { src: "src/oxfmt-config.json", dest: "dist/oxfmt/config.json" },
+    ];
 
-    mkdirSync(targetDir, { recursive: true });
-    copyFileSync("src/oxlint-config.json", targetFile);
-
-    console.log("✓ Copied oxlint-config.json to dist/oxlint/config.json");
+    for (const { src, dest } of copies) {
+      const dir = dest.substring(0, dest.lastIndexOf("/"));
+      mkdirSync(dir, { recursive: true });
+      copyFileSync(src, dest);
+      console.log(`✓ Copied ${src} to ${dest}`);
+    }
   },
   external: ["react"],
 });
