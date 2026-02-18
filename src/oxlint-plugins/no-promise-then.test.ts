@@ -135,7 +135,7 @@ describe("no-promise-then", () => {
     expect(report).not.toHaveBeenCalled();
   });
 
-  it("should not report for method calls with names other than 'then'", () => {
+  it("should report when .catch() is called on a promise", () => {
     const { report, visitor } = createRuleHarness(noPromiseThenRule, "no-promise-then");
 
     const node: ESTree.CallExpression = {
@@ -144,6 +144,36 @@ describe("no-promise-then", () => {
         type: "MemberExpression",
         object: createIdentifier("promise"),
         property: createIdentifier("catch"),
+        computed: false,
+        optional: false,
+        parent: undefined as unknown as ESTree.Node,
+        ...createSpan(),
+      },
+      arguments: [],
+      optional: false,
+      parent: undefined as unknown as ESTree.Node,
+      ...createSpan(),
+    };
+
+    if ("CallExpression" in visitor && visitor.CallExpression) {
+      visitor.CallExpression(node);
+    }
+
+    expect(report).toHaveBeenCalledWith({
+      node,
+      message: "Avoid using .catch() on promises. Use async/await instead.",
+    });
+  });
+
+  it("should not report for method calls with names other than 'then' or 'catch'", () => {
+    const { report, visitor } = createRuleHarness(noPromiseThenRule, "no-promise-then");
+
+    const node: ESTree.CallExpression = {
+      type: "CallExpression",
+      callee: {
+        type: "MemberExpression",
+        object: createIdentifier("promise"),
+        property: createIdentifier("finally"),
         computed: false,
         optional: false,
         parent: undefined as unknown as ESTree.Node,

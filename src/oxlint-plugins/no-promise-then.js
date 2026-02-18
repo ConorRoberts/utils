@@ -6,7 +6,7 @@ const rule = defineRule({
   meta: {
     type: "problem",
     docs: {
-      description: "Disallow using .then() on promises. Use async/await instead.",
+      description: "Disallow using .then() and .catch() on promises. Use async/await instead.",
       recommended: true,
     },
     schema: [],
@@ -21,11 +21,11 @@ const rule = defineRule({
 
         const memberExpression = node.callee;
 
-        // Check if the property being called is "then"
-        if (memberExpression.property.type === "Identifier" && memberExpression.property.name === "then") {
+        // Check if the property being called is "then" or "catch"
+        if (memberExpression.property.type === "Identifier" && (memberExpression.property.name === "then" || memberExpression.property.name === "catch")) {
           context.report({
             node,
-            message: "Avoid using .then() on promises. Use async/await instead.",
+            message: `Avoid using .${memberExpression.property.name}() on promises. Use async/await instead.`,
           });
         }
       },
