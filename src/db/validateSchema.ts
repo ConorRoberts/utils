@@ -22,8 +22,7 @@
 
 import { consola } from "consola";
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join, resolve } from "node:path";
 
 interface NameLengthIssue {
   type: "table" | "column" | "constraint";
@@ -81,12 +80,11 @@ interface DrizzleUniqueConstraint {
 const MAX_IDENTIFIER_LENGTH = 64;
 const MAX_CONSTRAINT_NAME_LENGTH = 64;
 
-const getLatestSnapshot = (): DrizzleSnapshot => {
-  const currentDir = fileURLToPath(new URL(".", import.meta.url));
-  const metaDir = join(currentDir, "../../../common/migrations/meta");
+const getLatestSnapshot = (metaDir: string): DrizzleSnapshot => {
+  const resolvedMetaDir = resolve(metaDir);
 
   // Read the journal to find the latest migration
-  const journalPath = join(metaDir, "_journal.json");
+  const journalPath = join(resolvedMetaDir, "_journal.json");
   const parsedJournal = JSON.parse(readFileSync(journalPath, "utf-8"));
 
   interface JournalEntry {
@@ -102,18 +100,24 @@ const getLatestSnapshot = (): DrizzleSnapshot => {
   }
 
   // Read the latest snapshot
-  const snapshotPath = join(metaDir, `${latestEntry.idx.toString().padStart(4, "0")}_snapshot.json`);
+  const snapshotPath = join(resolvedMetaDir, `${latestEntry.idx.toString().padStart(4, "0")}_snapshot.json`);
   const parsedSnapshot = JSON.parse(readFileSync(snapshotPath, "utf-8"));
   const snapshot: DrizzleSnapshot = parsedSnapshot;
 
   return snapshot;
 };
 
-const validateDatabaseSchema = (verbose = false): number => {
+interface ValidateDatabaseSchemaOptions {
+  metaDir: string;
+  verbose?: boolean;
+}
+
+const validateDatabaseSchema = (options: ValidateDatabaseSchemaOptions): number => {
+  const { metaDir, verbose = false } = options;
   const issues: NameLengthIssue[] = [];
   const allConstraints: Array<{ table: string; type: string; name: string; length: number }> = [];
 
-  const snapshot = getLatestSnapshot();
+  const snapshot = getLatestSnapshot(metaDir);
   const tables = Object.values(snapshot.tables);
 
   tables.forEach((table) => {
