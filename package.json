@@ -31,9 +31,13 @@
       "types": "./dist/oxlint/index.d.mts",
       "default": "./dist/oxlint/index.mjs"
     },
-    "./db": {
-      "types": "./dist/db/index.d.mts",
-      "default": "./dist/db/index.mjs"
+    "./db/migrate": {
+      "types": "./dist/db/migrate.d.mts",
+      "default": "./dist/db/migrate.mjs"
+    },
+    "./db/validate-schema": {
+      "types": "./dist/db/validate-schema.d.mts",
+      "default": "./dist/db/validate-schema.mjs"
     }
   },
   "scripts": {

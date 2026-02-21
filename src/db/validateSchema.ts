@@ -371,6 +371,4 @@ const validateDatabaseSchema = (verbose = false): number => {
   return 1;
 };
 
-const verbose = process.argv.includes("--verbose") || process.argv.includes("-v");
-const exitCode = validateDatabaseSchema(verbose);
-process.exit(exitCode);
+export { validateDatabaseSchema };

@@ -9,7 +9,8 @@ export default defineConfig({
   entry: {
     env: "src/env.ts",
     images: "src/images.ts",
-    db: "src/db/index.ts",
+    "db/migrate": "src/db/migrate.ts",
+    "db/validate-schema": "src/db/validateSchema.ts",
     react: "src/react/index.ts",
     "oxlint/index": "src/oxlint-plugins/index.js",
   },
