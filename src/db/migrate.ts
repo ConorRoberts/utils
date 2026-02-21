@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import { consola } from "consola";
 import { drizzle } from "drizzle-orm/planetscale-serverless";
 import { migrate } from "drizzle-orm/planetscale-serverless/migrator";
@@ -20,7 +21,7 @@ const runMigration = async (options: MigrateOptions) => {
     },
   });
 
-  await migrate(db, { migrationsFolder: options.migrationsFolder });
+  await migrate(db, { migrationsFolder: resolve(options.migrationsFolder) });
   consola.log("[OK] Migrations completed successfully!");
 };
 
