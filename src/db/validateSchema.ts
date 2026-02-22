@@ -110,12 +110,20 @@ const getLatestSnapshot = (metaDir: string): DrizzleSnapshot => {
 interface ValidateDatabaseSchemaOptions {
   metaDir: string;
   verbose?: boolean;
+  exitOnComplete?: boolean;
 }
 
 const validateDatabaseSchema = (options: ValidateDatabaseSchemaOptions): number => {
-  const { metaDir, verbose = false } = options;
+  const { metaDir, verbose = false, exitOnComplete = false } = options;
   const issues: NameLengthIssue[] = [];
   const allConstraints: Array<{ table: string; type: string; name: string; length: number }> = [];
+  const finalize = (exitCode: number): number => {
+    if (exitOnComplete) {
+      process.exit(exitCode);
+    }
+
+    return exitCode;
+  };
 
   const snapshot = getLatestSnapshot(metaDir);
   const tables = Object.values(snapshot.tables);
@@ -262,7 +270,7 @@ const validateDatabaseSchema = (options: ValidateDatabaseSchemaOptions): number 
 
   if (issues.length === 0) {
     consola.success("No name length issues found!");
-    return 0;
+    return finalize(0);
   }
 
   consola.warn(`Found ${issues.length} name length issue(s):`);
@@ -372,7 +380,7 @@ const validateDatabaseSchema = (options: ValidateDatabaseSchemaOptions): number 
   consola.log("5. Run this check with --verbose to see all constraint names");
   consola.log("");
 
-  return 1;
+  return finalize(1);
 };
 
 export { validateDatabaseSchema };
