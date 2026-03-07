@@ -205,6 +205,5 @@ const runMigrations = async <TSchema extends DrizzleSchema>(options: MigrateOpti
   consola.log("[OK] Migrations completed successfully!");
 };
 
-export * from "./filterTables";
 export { runMigrations };
 export type { DrizzleSchema, MigrateOptions, SchemaTableName };
