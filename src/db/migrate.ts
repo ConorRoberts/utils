@@ -1,13 +1,11 @@
 import { consola } from "consola";
-import { DrizzleQueryError } from "drizzle-orm/errors";
 import { sql } from "drizzle-orm";
-import type { AnyMySqlTable } from "drizzle-orm/mysql-core";
+import { DrizzleQueryError } from "drizzle-orm/errors";
 import { drizzle } from "drizzle-orm/planetscale-serverless";
 import { migrate } from "drizzle-orm/planetscale-serverless/migrator";
 import { getTableName } from "drizzle-orm/table";
 import { resolve } from "node:path";
-
-type DrizzleSchema = Record<string, AnyMySqlTable>;
+import type { DrizzleSchema } from "./types";
 
 type SchemaTableName<TSchema extends DrizzleSchema> = TSchema[keyof TSchema]["_"]["name"];
 
@@ -207,5 +205,6 @@ const runMigrations = async <TSchema extends DrizzleSchema>(options: MigrateOpti
   consola.log("[OK] Migrations completed successfully!");
 };
 
+export * from "./filterTables";
 export { runMigrations };
 export type { DrizzleSchema, MigrateOptions, SchemaTableName };
