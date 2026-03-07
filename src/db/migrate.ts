@@ -141,7 +141,6 @@ const dropTables = async (db: ReturnType<typeof drizzle>, tableNames: string[]):
     } catch (error) {
       const errorDetails = parseError(error) || String(error);
       consola.error(`[FAIL] Failed to drop ${tableName}: ${errorDetails}`);
-      throw new Error(`Cannot proceed: failed to drop ${tableName}`);
     }
   }
 };
