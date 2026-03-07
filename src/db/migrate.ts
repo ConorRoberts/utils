@@ -127,7 +127,6 @@ const deleteTableRows = async (db: ReturnType<typeof drizzle>, tableNames: strin
       });
 
       consola.error(`[FAIL] Failed to delete from ${tableName}: ${errorDetails}`);
-      throw error;
     }
   }
 
