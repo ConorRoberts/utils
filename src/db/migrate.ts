@@ -201,7 +201,7 @@ const runMigrations = async <TSchema extends DrizzleSchema>(options: MigrateOpti
   }
 
   consola.log("Running database migrations...");
-  await migrate(db, { migrationsFolder: resolve(options.migrationsFolder) });
+  await migrate(db, { migrationsFolder: resolve(options.migrationsFolder), migrationsTable: options.migrationsTable });
   consola.log("[OK] Migrations completed successfully!");
 };
 
