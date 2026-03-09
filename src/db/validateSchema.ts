@@ -33,6 +33,18 @@ interface NameLengthIssue {
   constraintType?: "foreign_key" | "primary_key" | "unique" | "index";
 }
 
+interface IndexWidthIssue {
+  type: "index_width";
+  tableName: string;
+  name: string;
+  keyType: "primary_key" | "unique" | "index";
+  actualBytes: number;
+  maxBytes: number;
+  columns: string[];
+}
+
+type ValidationIssue = NameLengthIssue | IndexWidthIssue;
+
 interface DrizzleSnapshot {
   tables: Record<string, DrizzleTable>;
 }
@@ -57,6 +69,7 @@ interface DrizzleColumn {
 interface DrizzleIndex {
   name: string;
   columns: string[];
+  isUnique?: boolean;
 }
 
 interface DrizzleForeignKey {
@@ -79,6 +92,8 @@ interface DrizzleUniqueConstraint {
 
 const MAX_IDENTIFIER_LENGTH = 64;
 const MAX_CONSTRAINT_NAME_LENGTH = 64;
+const MYSQL_MAX_INDEX_BYTES = 3072;
+const UTF8MB4_BYTES_PER_CHAR = 4;
 
 const getLatestSnapshot = (metaDir: string): DrizzleSnapshot => {
   const resolvedMetaDir = resolve(metaDir);
@@ -113,9 +128,54 @@ interface ValidateDatabaseSchemaOptions {
   exitOnComplete?: boolean;
 }
 
+const getTypeByteLength = (columnType: string): number => {
+  const normalizedType = columnType.toLowerCase().trim();
+
+  const varcharMatch = normalizedType.match(/^varchar\((\d+)\)$/);
+  if (varcharMatch) {
+    return Number(varcharMatch[1]) * UTF8MB4_BYTES_PER_CHAR;
+  }
+
+  const charMatch = normalizedType.match(/^char\((\d+)\)$/);
+  if (charMatch) {
+    return Number(charMatch[1]) * UTF8MB4_BYTES_PER_CHAR;
+  }
+
+  const varbinaryMatch = normalizedType.match(/^varbinary\((\d+)\)$/);
+  if (varbinaryMatch) {
+    return Number(varbinaryMatch[1]);
+  }
+
+  const binaryMatch = normalizedType.match(/^binary\((\d+)\)$/);
+  if (binaryMatch) {
+    return Number(binaryMatch[1]);
+  }
+
+  if (normalizedType.startsWith("tinyint")) return 1;
+  if (normalizedType.startsWith("smallint")) return 2;
+  if (normalizedType.startsWith("mediumint")) return 3;
+  if (normalizedType.startsWith("int")) return 4;
+  if (normalizedType.startsWith("bigint")) return 8;
+  if (normalizedType.startsWith("date")) return 3;
+  if (normalizedType.startsWith("datetime")) return 8;
+  if (normalizedType.startsWith("timestamp")) return 4;
+
+  if (normalizedType.includes("text") || normalizedType === "json" || normalizedType.includes("blob")) {
+    return Number.POSITIVE_INFINITY;
+  }
+
+  return 0;
+};
+
+const getKeyTypeLabel = (keyType: IndexWidthIssue["keyType"]): string => {
+  if (keyType === "primary_key") return "Primary Keys";
+  if (keyType === "unique") return "Unique Indexes";
+  return "Indexes";
+};
+
 const validateDatabaseSchema = (options: ValidateDatabaseSchemaOptions): number => {
   const { metaDir, verbose = false, exitOnComplete = false } = options;
-  const issues: NameLengthIssue[] = [];
+  const issues: ValidationIssue[] = [];
   const allConstraints: Array<{ table: string; type: string; name: string; length: number }> = [];
   const finalize = (exitCode: number): number => {
     if (exitOnComplete) {
@@ -127,6 +187,36 @@ const validateDatabaseSchema = (options: ValidateDatabaseSchemaOptions): number 
 
   const snapshot = getLatestSnapshot(metaDir);
   const tables = Object.values(snapshot.tables);
+  const validateIndexWidth = (
+    table: DrizzleTable,
+    args: {
+      name: string;
+      columns: string[];
+      keyType: IndexWidthIssue["keyType"];
+    },
+  ) => {
+    const actualBytes = args.columns.reduce((total, columnName) => {
+      const column = table.columns[columnName];
+
+      if (!column) {
+        return total;
+      }
+
+      return total + getTypeByteLength(column.type);
+    }, 0);
+
+    if (actualBytes > MYSQL_MAX_INDEX_BYTES || !Number.isFinite(actualBytes)) {
+      issues.push({
+        type: "index_width",
+        tableName: table.name,
+        name: args.name,
+        keyType: args.keyType,
+        actualBytes,
+        maxBytes: MYSQL_MAX_INDEX_BYTES,
+        columns: args.columns,
+      });
+    }
+  };
 
   tables.forEach((table) => {
     // Check table name length
@@ -182,6 +272,12 @@ const validateDatabaseSchema = (options: ValidateDatabaseSchemaOptions): number 
           constraintType: "primary_key",
         });
       }
+
+      validateIndexWidth(table, {
+        name: pk.name,
+        columns: pk.columns,
+        keyType: "primary_key",
+      });
     });
 
     // Check unique constraint names
@@ -197,6 +293,12 @@ const validateDatabaseSchema = (options: ValidateDatabaseSchemaOptions): number 
           constraintType: "unique",
         });
       }
+
+      validateIndexWidth(table, {
+        name: unique.name,
+        columns: unique.columns,
+        keyType: "unique",
+      });
     });
 
     // Check index names
@@ -212,6 +314,12 @@ const validateDatabaseSchema = (options: ValidateDatabaseSchemaOptions): number 
           constraintType: "index",
         });
       }
+
+      validateIndexWidth(table, {
+        name: index.name,
+        columns: index.columns,
+        keyType: index.isUnique ? "unique" : "index",
+      });
     });
   });
 
@@ -234,9 +342,10 @@ const validateDatabaseSchema = (options: ValidateDatabaseSchemaOptions): number 
   }
 
   // Print report
-  consola.box("MySQL Name Length Analysis");
+  consola.box("MySQL Schema Analysis");
   consola.info(`Maximum identifier length: ${MAX_IDENTIFIER_LENGTH} characters`);
   consola.info(`Maximum constraint name length: ${MAX_CONSTRAINT_NAME_LENGTH} characters`);
+  consola.info(`Maximum index key length: ${MYSQL_MAX_INDEX_BYTES} bytes`);
   consola.info(`Analyzed ${tables.length} tables`);
   consola.log("");
 
@@ -269,16 +378,17 @@ const validateDatabaseSchema = (options: ValidateDatabaseSchemaOptions): number 
   consola.log("");
 
   if (issues.length === 0) {
-    consola.success("No name length issues found!");
+    consola.success("No schema validation issues found!");
     return finalize(0);
   }
 
-  consola.warn(`Found ${issues.length} name length issue(s):`);
+  consola.warn(`Found ${issues.length} schema validation issue(s):`);
   consola.log("");
 
-  const tableIssues = issues.filter((i) => i.type === "table");
-  const columnIssues = issues.filter((i) => i.type === "column");
-  const constraintIssues = issues.filter((i) => i.type === "constraint");
+  const tableIssues = issues.filter((i): i is NameLengthIssue => i.type === "table");
+  const columnIssues = issues.filter((i): i is NameLengthIssue => i.type === "column");
+  const constraintIssues = issues.filter((i): i is NameLengthIssue => i.type === "constraint");
+  const indexWidthIssues = issues.filter((i): i is IndexWidthIssue => i.type === "index_width");
 
   if (tableIssues.length > 0) {
     consola.error("Table Name Issues:");
@@ -349,11 +459,39 @@ const validateDatabaseSchema = (options: ValidateDatabaseSchemaOptions): number 
     consola.log("");
   }
 
+  if (indexWidthIssues.length > 0) {
+    consola.error("Index Width Issues:");
+    const primaryKeyWidthIssues = indexWidthIssues.filter((issue) => issue.keyType === "primary_key");
+    const uniqueWidthIssues = indexWidthIssues.filter((issue) => issue.keyType === "unique");
+    const indexOnlyWidthIssues = indexWidthIssues.filter((issue) => issue.keyType === "index");
+
+    for (const issueGroup of [primaryKeyWidthIssues, uniqueWidthIssues, indexOnlyWidthIssues]) {
+      if (issueGroup.length === 0) {
+        continue;
+      }
+
+      consola.log(`  ${getKeyTypeLabel(issueGroup[0]!.keyType)}:`);
+      issueGroup.forEach((issue) => {
+        const actualBytes = Number.isFinite(issue.actualBytes) ? issue.actualBytes.toString() : "unbounded";
+        consola.log(
+          `    - ${issue.name} (${actualBytes} bytes, exceeds max by ${
+            Number.isFinite(issue.actualBytes) ? issue.actualBytes - issue.maxBytes : "unknown amount"
+          })`,
+        );
+        consola.log(`      Table: ${issue.tableName}`);
+        consola.log(`      Columns: ${issue.columns.join(", ")}`);
+      });
+    }
+
+    consola.log("");
+  }
+
   consola.box("Summary");
   consola.info(`Total issues: ${issues.length}`);
   consola.info(`  - Table names: ${tableIssues.length}`);
   consola.info(`  - Column names: ${columnIssues.length}`);
   consola.info(`  - Constraint names: ${constraintIssues.length}`);
+  consola.info(`  - Index widths: ${indexWidthIssues.length}`);
   if (constraintIssues.length > 0) {
     const fkCount = constraintIssues.filter((i) => i.constraintType === "foreign_key").length;
     const pkCount = constraintIssues.filter((i) => i.constraintType === "primary_key").length;
@@ -364,18 +502,23 @@ const validateDatabaseSchema = (options: ValidateDatabaseSchemaOptions): number 
     consola.info(`    - Unique constraints: ${uniqueCount}`);
     consola.info(`    - Indexes: ${indexCount}`);
   }
+  if (indexWidthIssues.length > 0) {
+    const pkWidthCount = indexWidthIssues.filter((i) => i.keyType === "primary_key").length;
+    const uniqueWidthCount = indexWidthIssues.filter((i) => i.keyType === "unique").length;
+    const indexWidthCount = indexWidthIssues.filter((i) => i.keyType === "index").length;
+    consola.info(`    - Primary keys: ${pkWidthCount}`);
+    consola.info(`    - Unique indexes: ${uniqueWidthCount}`);
+    consola.info(`    - Indexes: ${indexWidthCount}`);
+  }
   consola.log("");
 
   // Print actionable feedback
-  consola.fail("MIGRATION BLOCKED: Name length violations detected!");
+  consola.fail("MIGRATION BLOCKED: Schema validation violations detected!");
   consola.log("");
   consola.start("Action required:");
   consola.log("1. Review the issues listed above");
-  consola.log("2. Shorten table/column names in your schema definitions");
-  consola.log("3. For foreign keys, consider:");
-  consola.log("   - Shortening table names");
-  consola.log("   - Shortening column names");
-  consola.log("   - Using shorter referenced table names");
+  consola.log("2. Shorten table/column/constraint names where required");
+  consola.log("3. Reduce indexed column widths or introduce prefix/hash columns for oversized indexes");
   consola.log("4. Run 'pnpm generate' again after making changes");
   consola.log("5. Run this check with --verbose to see all constraint names");
   consola.log("");

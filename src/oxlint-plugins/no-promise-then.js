@@ -22,7 +22,10 @@ const rule = defineRule({
         const memberExpression = node.callee;
 
         // Check if the property being called is "then" or "catch"
-        if (memberExpression.property.type === "Identifier" && (memberExpression.property.name === "then" || memberExpression.property.name === "catch")) {
+        if (
+          memberExpression.property.type === "Identifier" &&
+          (memberExpression.property.name === "then" || memberExpression.property.name === "catch")
+        ) {
           context.report({
             node,
             message: `Avoid using .${memberExpression.property.name}() on promises. Use async/await instead.`,
