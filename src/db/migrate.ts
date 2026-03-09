@@ -18,6 +18,7 @@ interface MigrateConnectionOptions {
 
 interface MigrateSharedOptions<TSchema extends DrizzleSchema> extends MigrateConnectionOptions {
   deleteOrder?: SchemaTableName<TSchema>[];
+  migrationsTable?: string;
 }
 
 type CleanMigrateOptions<TSchema extends DrizzleSchema> = MigrateSharedOptions<TSchema> & {
@@ -155,13 +156,14 @@ const cleanDatabase = async (
   }
 
   const tableNames = listSchemaTables(options.schema);
+  const allTableNames = options.migrationsTable ? [...tableNames, options.migrationsTable] : tableNames;
 
-  if (tableNames.length === 0) {
+  if (allTableNames.length === 0) {
     consola.log("Clean requested, but no tables were found in the provided Drizzle schema.");
     return;
   }
 
-  const ordered = buildDeleteOrder(tableNames, options.deleteOrder ?? []);
+  const ordered = buildDeleteOrder(allTableNames, options.deleteOrder ?? []);
 
   consola.warn("WARNING: This will delete and drop ALL tables from the database.");
   consola.log(`Database host: ${db.$client.config.host}`);
