@@ -34,6 +34,7 @@
     "conorroberts/no-finally": "error",
     "conorroberts/no-react-namespace": "error",
     "conorroberts/no-type-cast": "warn",
+    "conorroberts/no-void": "error",
     "conorroberts/no-emoji": "error",
     "conorroberts/no-component-date-instantiation": "warn",
     "conorroberts/no-component-pure-functions": "warn",

@@ -16,6 +16,7 @@ import { noReactNamespaceRule } from "./no-react-namespace.js";
 import { noSwitchRule } from "./no-switch-plugin.js";
 import { noTopLevelLetRule } from "./no-top-level-let.js";
 import { noTypeCastRule } from "./no-type-cast.js";
+import { noVoidRule } from "./no-void.js";
 import { prettyPropsRule } from "./pretty-props.js";
 
 const plugin = definePlugin({
@@ -39,6 +40,7 @@ const plugin = definePlugin({
     "no-switch": noSwitchRule,
     "no-top-level-let": noTopLevelLetRule,
     "no-type-cast": noTypeCastRule,
+    "no-void": noVoidRule,
     "pretty-props": prettyPropsRule,
   },
 });
