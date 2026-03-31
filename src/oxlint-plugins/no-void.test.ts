@@ -50,4 +50,19 @@ describe("no-void", () => {
 
     expect(report).not.toHaveBeenCalled();
   });
+
+  it("should not report for the TypeScript void type", () => {
+    const { report, visitor } = createRuleHarness(noVoidRule, "no-void");
+
+    const node: ESTree.TSVoidKeyword = {
+      type: "TSVoidKeyword",
+      ...createSpan(),
+    };
+
+    if ("TSVoidKeyword" in visitor && visitor.TSVoidKeyword) {
+      visitor.TSVoidKeyword(node);
+    }
+
+    expect(report).not.toHaveBeenCalled();
+  });
 });
