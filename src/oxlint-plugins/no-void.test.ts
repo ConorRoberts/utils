@@ -56,6 +56,7 @@ describe("no-void", () => {
 
     const node: ESTree.TSVoidKeyword = {
       type: "TSVoidKeyword",
+      parent: undefined as unknown as ESTree.Node,
       ...createSpan(),
     };
 
