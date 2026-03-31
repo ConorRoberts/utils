@@ -43,13 +43,5 @@
   },
   "[jsonc]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
-  },
-  "[go]": {
-    "editor.defaultFormatter": "golang.Go",
-    "editor.formatOnSave": true,
-    "editor.formatOnSaveMode": "file"
-  },
-  "python.defaultInterpreterPath": "${workspaceFolder}/packages/agent/.venv/bin/python",
-  "python.analysis.extraPaths": ["${workspaceFolder}/packages/agent/src"],
-  "python.terminal.activateEnvironment": false
+  }
 }
