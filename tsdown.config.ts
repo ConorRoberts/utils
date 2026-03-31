@@ -18,6 +18,7 @@ export default defineConfig({
     const copies = [
       { src: "src/oxlint-config.json", dest: "dist/oxlint/config.json" },
       { src: "src/oxfmt-config.json", dest: "dist/oxfmt/config.json" },
+      { src: "src/vscode-settings.json", dest: "dist/vscode/settings.json" },
     ];
 
     for (const { src, dest } of copies) {
