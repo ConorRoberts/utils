@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ESTree } from "oxlint/plugins";
+import type { ESTree } from "@oxlint/plugins";
 import { noNestedConditionalsRule } from "./no-nested-conditionals.js";
 import { createIdentifierReference, createProgram, createRuleHarness, createSpan } from "./test-utils.js";
 

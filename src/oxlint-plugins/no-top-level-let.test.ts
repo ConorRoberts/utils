@@ -1,6 +1,6 @@
 import { assert, describe, expect, it } from "vitest";
 
-import type { ESTree } from "oxlint/plugins";
+import type { ESTree } from "@oxlint/plugins";
 
 import { noTopLevelLetRule } from "./no-top-level-let.js";
 import {
@@ -354,7 +354,6 @@ describe("no-top-level-let rule", () => {
       body: [],
       sourceType: "module",
       parent: null,
-      hashbang: null,
       comments: [],
       tokens: [],
       ...createSpan(),

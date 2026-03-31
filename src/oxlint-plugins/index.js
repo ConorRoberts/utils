@@ -1,4 +1,4 @@
-import { definePlugin } from "oxlint/plugins";
+import { definePlugin } from "@oxlint/plugins";
 
 import { jsxComponentPascalCaseRule } from "./jsx-component-pascal-case.js";
 import { noArrayTypeRule } from "./no-array-type.js";

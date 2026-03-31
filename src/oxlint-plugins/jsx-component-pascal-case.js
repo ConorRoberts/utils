@@ -1,11 +1,11 @@
-import { defineRule } from "oxlint/plugins";
+import { defineRule } from "@oxlint/plugins";
 
 /**
- * @typedef {import("oxlint/plugins").Context} RuleContext
- * @typedef {import("oxlint/plugins").ESTree.Node} ESTNode
- * @typedef {import("oxlint/plugins").ESTree.Expression} ESTExpression
- * @typedef {import("oxlint/plugins").ESTree.ReturnStatement} ReturnStatementNode
- * @typedef {import("oxlint/plugins").ESTree.Function | import("oxlint/plugins").ESTree.ArrowFunctionExpression} FunctionLikeNode
+ * @typedef {import("@oxlint/plugins").Context} RuleContext
+ * @typedef {import("@oxlint/plugins").ESTree.Node} ESTNode
+ * @typedef {import("@oxlint/plugins").ESTree.Expression} ESTExpression
+ * @typedef {import("@oxlint/plugins").ESTree.ReturnStatement} ReturnStatementNode
+ * @typedef {import("@oxlint/plugins").ESTree.Function | import("@oxlint/plugins").ESTree.ArrowFunctionExpression} FunctionLikeNode
  */
 
 /**

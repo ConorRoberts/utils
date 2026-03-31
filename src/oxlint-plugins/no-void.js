@@ -1,7 +1,7 @@
-import { defineRule } from "oxlint/plugins";
+import { defineRule } from "@oxlint/plugins";
 
-/** @typedef {import("oxlint/plugins").ESTree.Node} ESTNode */
-/** @typedef {import("oxlint/plugins").ESTree.UnaryExpression} UnaryExpression */
+/** @typedef {import("@oxlint/plugins").ESTree.Node} ESTNode */
+/** @typedef {import("@oxlint/plugins").ESTree.UnaryExpression} UnaryExpression */
 
 /**
  * The rule is only meant to block the JavaScript runtime `void` operator.

@@ -1,11 +1,11 @@
-import { defineRule } from "oxlint/plugins";
+import { defineRule } from "@oxlint/plugins";
 import { getFunctionName, getEnclosingFunction } from "./no-inline-components.js";
 
 /**
- * @typedef {import("oxlint/plugins").Context} RuleContext
- * @typedef {import("oxlint/plugins").ESTree.Node} ESTNode
- * @typedef {import("oxlint/plugins").ESTree.Function | import("oxlint/plugins").ESTree.ArrowFunctionExpression} FunctionLikeNode
- * @typedef {import("oxlint/plugins").ESTree.VariableDeclarator} VariableDeclaratorNode
+ * @typedef {import("@oxlint/plugins").Context} RuleContext
+ * @typedef {import("@oxlint/plugins").ESTree.Node} ESTNode
+ * @typedef {import("@oxlint/plugins").ESTree.Function | import("@oxlint/plugins").ESTree.ArrowFunctionExpression} FunctionLikeNode
+ * @typedef {import("@oxlint/plugins").ESTree.VariableDeclarator} VariableDeclaratorNode
  */
 
 const FUNCTION_NODE_TYPES = new Set(["FunctionDeclaration", "FunctionExpression", "ArrowFunctionExpression"]);

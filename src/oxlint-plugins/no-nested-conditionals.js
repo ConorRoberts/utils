@@ -1,6 +1,6 @@
-import { defineRule } from "oxlint/plugins";
+import { defineRule } from "@oxlint/plugins";
 
-/** @typedef {import("oxlint/plugins").ESTree.Node} ESTNode */
+/** @typedef {import("@oxlint/plugins").ESTree.Node} ESTNode */
 
 const DEFAULT_MAX_DEPTH = 2;
 

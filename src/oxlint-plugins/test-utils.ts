@@ -1,6 +1,6 @@
 import { vi } from "vitest";
 
-import type { Context, CreateOnceRule, CreateRule, ESTree, Rule, SourceCode } from "oxlint/plugins";
+import type { Context, CreateOnceRule, CreateRule, ESTree, Rule, SourceCode } from "@oxlint/plugins";
 
 export const createSpan = () => ({
   start: 0,
@@ -168,8 +168,7 @@ const createOxlintContext = (context: RuleContext): Context => {
     },
   };
 
-  // @ts-expect-error - Stub is missing getFilename, getPhysicalFilename, getCwd, etc. which are not needed for tests
-  return stub;
+  return stub as unknown as Context;
 };
 
 const getRuleVisitor = (rule: Rule, context: RuleContext): RuleVisitor => {
