@@ -1,5 +1,3 @@
-set -eu
-
 pnpm build
 git add .
 git commit -m "Autocommit"
